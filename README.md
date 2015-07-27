@@ -1,7 +1,13 @@
-# generator-web-data-connector [![Build Status](https://secure.travis-ci.org/tableau-mkt/generator-web-data-connector.png?branch=master)](https://travis-ci.org/tableau-mkt/generator-web-data-connector)
+# Tableau web data connector generator [![Build Status](https://secure.travis-ci.org/tableau-mkt/generator-web-data-connector.png?branch=master)](https://travis-ci.org/tableau-mkt/generator-web-data-connector)
 
-> [Yeoman](http://yeoman.io) generator
+## Notes while in development...
 
+Once cloned, run `npm link` within the working directory. This will allow you to
+test things out locally by running `yo web-data-connector`.
+
+Once you've run `yo web-data-connector`, you can run `grunt` to start up a local
+server that watches for changes to JavaScript files. You can point Tableau at
+`http://localhost:9001` to see things in context.
 
 ## Getting Started
 
