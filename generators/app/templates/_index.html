@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title><%= props.name %></title>
+  <link rel="stylesheet" type="text/css" href="bower_components/material-design-lite/material.min.css">
+</head>
+<body>
+<div class="demo-grid-1 mdl-grid">
+    <div class="mdl-cell mdl-cell--12-col">
+        <h2><%= props.name %></h2>
+    </div>
+</div>
+<div class="demo-grid-1 mdl-grid">
+    <div class="mdl-cell mdl-cell--4-col" style="word-wrap:break-word;">
+        <p>Paste a link to a published google spreadsheet:</p>
+        <p>example: <em>0AhjdTlo61w4udFBDY0RzSE5BZmNxLXpJMHIxSmlVUXc</em></p>
+        <p>Note: Making a spreadsheet public is different than <a href="https://support.google.com/docs/answer/37579?hl=en">publishing</a> it.</p>
+    </div>
+    <div class="mdl-cell mdl-cell--8-col">
+        <form id="inputForm" action="">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+                <input class="mdl-textfield__input" type="text" id="docLink" name="docLink" />
+                <label class="mdl-textfield__label" for="docLink">Google Spreadsheet Link</label>
+            </div>
+            <div>
+                <input type="submit" value="Get spreadsheet" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="build/all.min.js"></script>
+</body>
+</html>
