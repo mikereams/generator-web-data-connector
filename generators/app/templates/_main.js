@@ -1,19 +1,51 @@
-(function($, tableau) {
-  var myConnector = tableau.makeConnector();
+var wdcw = window.wdcw || {};
 
-  myConnector.init = function () {
-    // If we are in the interactive phase, repopulate the input text box if there is connectionData present.
-    // This is hit when editing a connection in Tableau.
-    if (tableau.phase == tableau.phaseEnum.interactivePhase) {
-      $('input[type=text]').val(tableau.connectionData);
+(function($, tableau, wdcw) {
+
+  /**
+   * Run during initialization of the web data connector.
+   *
+   * @param {string} phase
+   *   The initialization phase. This can be one of:
+   *   - tableau.phaseEnum.interactivePhase: Indicates when the connector is
+   *     being initialized with a user interface suitable for an end-user to
+   *     enter connection configuration details.
+   *   - tableau.phaseEnum.gatherDataPhase: Indicates when the connector is
+   *     being initialized in the background for the sole purpose of collecting
+   *     data.
+   *   - tableau.phaseEnum.authPhase: Indicates when the connector is being
+   *     accessed in a stripped down context for the sole purpose of refreshing
+   *     an OAuth authentication token.
+   */
+  wdcw.setup = function setup(phase) {
+    switch (phase) {
+      case tableau.phaseEnum.interactivePhase:
+        $('input[type=text]').val(tableau.connectionData);
+        break;
     }
-    tableau.initCallback();
   };
 
-  myConnector.getColumnHeaders = function() {
+  /**
+   * Primary method called when Tableau is asking for the column headers that
+   * this web data connector provides. Takes a single callable argument that you
+   * should call with the headers you've retrieved.
+   *
+   * @param {function(Array<{name, type}>)} registerHeaders
+   *   A callback function that takes an array of objects as its sole argument.
+   *   For example, you might call the callback in the following way:
+   *   registerHeaders([
+   *     {name: 'Boolean Column', type: 'bool'},
+   *     {name: 'Date Column', type: 'date'},
+   *     {name: 'DateTime Column', type: 'datetime'},
+   *     {name: 'Float Column', type: 'float'},
+   *     {name: 'Integer Column', type: 'int'},
+   *     {name: 'String Column', type: 'string'}
+   *   ]);
+   */
+  wdcw.columnHeaders = function columnHeaders(registerHeaders) {
+    var connector = this;
     _retrieveJsonData(function (tableData) {
-      var fieldNames = [],
-          fieldTypes = [],
+      var fields = [],
           numTypesFound = 0,
           ii = 0,
           column,
@@ -25,37 +57,52 @@
         entry = tableData.feed.entry[ii];
 
         if (entry.gs$cell.row == "1") {
-          // set field names
-          fieldNames.push(entry.content.$t);
+          // Set field names.
+          fields.push({name: entry.content.$t});
         }
         else {
           // use the first value for a column to guess the type
           column = parseInt(entry.gs$cell.col) - 1;
           // check if we already figured out the type for this column
-          if (fieldTypes[column]) continue;
+          if (fields[column].type) continue;
           // try to determine the column type based on this value.
           fieldType = 'string';
           fieldVal = entry.content.$t;
           if (parseInt(fieldVal).toString() == fieldVal) fieldType = 'int';
           else if (parseFloat(fieldVal).toString() == fieldVal) fieldType = 'float';
           else if (isFinite(new Date(fieldVal).getTime())) fieldType = 'date';
-          fieldTypes[column] = fieldType;
+          fields[column].type = fieldType;
           ++numTypesFound;
-          if (numTypesFound == fieldNames.length) {
+          if (numTypesFound == fields.length) {
             // we've found all the column types, so break out of this loop.
             break;
           }
         }
       }
-      // store the number of columns. We'll use this when pulling in the table data
-      myConnector._numCols = fieldNames.length;
-      tableau.headersCallback(fieldNames, fieldTypes);
+
+      // Register our headers.
+      connector._numCols = fields.length;
+      registerHeaders(fields);
     });
   };
 
-  myConnector.getTableData = function (lastRecordToken) {
+  /**
+   * Primary method called when Tableau is asking for your web data connector's
+   * data. Takes a single callable argument that you should call with all of the
+   * data you've retrieved.
+   *
+   * @param {function(Array<{object}>)} registerData
+   *   A callback function that takes an array of objects as its sole argument.
+   *   Each object should be a simple key/value map of column name to column
+   *   value. For example, you might call the callback in the following way:
+   *   registerData([
+   *     {'String Column': 'String Column Value', 'Integer Column': 123}
+   *   ]});
+   */
+  wdcw.tableData = function tableData(registerData) {
+    var connector = this;
     _retrieveJsonData(function (tableData) {
-      var toRet = [],
+      var data = [],
           lastRow = "1",
           rowData,
           ii,
@@ -68,26 +115,29 @@
         curRow = entry.gs$cell.row;
         // skip the first row of data.
         if (curRow == "1") continue;
-        if (curRow != lastRow)
-        {
+        if (curRow != lastRow) {
           lastRow = curRow;
-          if (rowData)
-          {
-            toRet.push(rowData);
+          if (rowData) {
+            data.push(rowData);
           }
           // create an array of empty values.
-          rowData = Array(myConnector._numCols).join(".").split(".");;
+          rowData = Array(connector._numCols).join(".").split(".");
         }
         column = parseInt(entry.gs$cell.col) - 1;
         rowData[column] = entry.content.$t;
       }
-      toRet.push(rowData);
-      tableau.dataCallback(toRet, null, false);
+      data.push(rowData);
+      registerData(data);
     });
   };
 
-  tableau.registerConnector(myConnector);
+  /**
+   * Run when the web data connector is being unloaded. Useful if you need
+   * custom logic to clean up resources or perform other shutdown asks.s
+   */
+  wdcw.teardown = function teardown() {
 
+  };
 
   //
   // Helper functions
@@ -137,25 +187,4 @@
     });
   }
 
-  $(document).ready(function(){
-    $("#inputForm").submit(function(e) { // This event fires when a button is clicked
-      var textField = $('input[type=text]'),
-          inputUrl = textField[0].value,
-          paramName = 'key',
-          regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"),
-          results = regex.exec(inputUrl),
-          docKey = results == null ? inputUrl : decodeURIComponent(results[1].replace(/\+/g, " "));
-
-      e.preventDefault();
-
-      if (!textField || textField.length == 0) {
-        return;
-      }
-
-      tableau.connectionData = docKey;
-      tableau.connectionName = '<%= props.name %>';
-      tableau.submit();
-    });
-  });
-
-})(jQuery, tableau);
+})(jQuery, tableau, wdcw);
