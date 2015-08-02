@@ -17,13 +17,7 @@ var wdcw = window.wdcw || {};
    *     accessed in a stripped down context for the sole purpose of refreshing
    *     an OAuth authentication token.
    */
-  wdcw.setup = function setup(phase) {
-    switch (phase) {
-      case tableau.phaseEnum.interactivePhase:
-        $('input[type=text]').val(tableau.connectionData);
-        break;
-    }
-  };
+  wdcw.setup = function setup(phase) {};
 
   /**
    * Primary method called when Tableau is asking for the column headers that
@@ -43,8 +37,10 @@ var wdcw = window.wdcw || {};
    *   ]);
    */
   wdcw.columnHeaders = function columnHeaders(registerHeaders) {
-    var connector = this;
-    _retrieveJsonData(function (tableData) {
+    var connector = this,
+        docKey = connector.getConnectionData().docLink;
+
+    $.getJSON(buildConnectionUrl(docKey), function(responseData) {
       var fields = [],
           numTypesFound = 0,
           ii = 0,
@@ -53,8 +49,8 @@ var wdcw = window.wdcw || {};
           fieldType,
           fieldVal;
 
-      for (0; ii < tableData.feed.entry.length; ++ii) {
-        entry = tableData.feed.entry[ii];
+      for (0; ii < responseData.feed.entry.length; ++ii) {
+        entry = responseData.feed.entry[ii];
 
         if (entry.gs$cell.row == "1") {
           // Set field names.
@@ -83,6 +79,8 @@ var wdcw = window.wdcw || {};
       // Register our headers.
       connector._numCols = fields.length;
       registerHeaders(fields);
+    }).fail(function(jqxhr, textStatus) {
+      tableau.abortWithError("error connecting to Google Spreadsheets: " + textStatus);
     });
   };
 
@@ -100,8 +98,10 @@ var wdcw = window.wdcw || {};
    *   ]});
    */
   wdcw.tableData = function tableData(registerData) {
-    var connector = this;
-    _retrieveJsonData(function (tableData) {
+    var connector = this,
+        docKey = connector.getConnectionData().docLink;
+
+    $.getJSON(buildConnectionUrl(docKey), function(responseData) {
       var data = [],
           lastRow = "1",
           rowData,
@@ -110,8 +110,8 @@ var wdcw = window.wdcw || {};
           curRow,
           column;
 
-      for (ii = 0; ii < tableData.feed.entry.length; ++ii) {
-        entry = tableData.feed.entry[ii];
+      for (ii = 0; ii < responseData.feed.entry.length; ++ii) {
+        entry = responseData.feed.entry[ii];
         curRow = entry.gs$cell.row;
         // skip the first row of data.
         if (curRow == "1") continue;
@@ -128,6 +128,8 @@ var wdcw = window.wdcw || {};
       }
       data.push(rowData);
       registerData(data);
+    }).fail(function(jqxhr, textStatus) {
+      tableau.abortWithError("error connecting to Google Spreadsheets: " + textStatus);
     });
   };
 
@@ -135,56 +137,31 @@ var wdcw = window.wdcw || {};
    * Run when the web data connector is being unloaded. Useful if you need
    * custom logic to clean up resources or perform other shutdown asks.s
    */
-  wdcw.teardown = function teardown() {
+  wdcw.teardown = function teardown() {};
 
-  };
-
-  //
-  // Helper functions
-  //
-
+  /**
+   * Private helper function to build the Google spreadsheet URL from the given
+   * doc link.
+   *
+   * @param {string} docLink
+   *   The docLink as provided by the user. Could be a URL or just the doc key.
+   *
+   * @returns {string}
+   *   The URL to be accessed to retrieve JSON.
+   */
   // build the spreadsheet url for the given doc key
-  function buildConnectionUrl(docKey) {
-    var urlParts;
+  function buildConnectionUrl(docLink) {
+    var regex = new RegExp("[\\?&]key=([^&#]*)"),
+        results = regex.exec(docLink),
+        docKey = results === null ? docLink : decodeURIComponent(results[1].replace(/\+/g, " ")),
+        urlParts;
 
     docKey = docKey.trim();
-    if (stringStartsWith(docKey, "http")) {
+    if (docKey.indexOf('http') === 0) {
       urlParts = docKey.split("/");
       docKey = urlParts[5];
     }
     return 'http://spreadsheets.google.com/feeds/cells/' + docKey + '/default/public/values?alt=json';
-  }
-
-  // string.startsWith is not available in all browsers, so use this implementation
-  function stringStartsWith(str, searchString, position) {
-    position = position || 0;
-    return str.indexOf(searchString, position) === position;
-  }
-
-  // Fetch the spreadsheet data, cache it, and call the given callback function.
-  // If the data is already cached, then just call the callback and return
-  function _retrieveJsonData(retrieveDataCallback) {
-    if (tableau.dataCache) {
-      retrieveDataCallback(tableau.dataCache);
-      return;
-    }
-
-    var docKey = tableau.connectionData,
-        connectionUrl = buildConnectionUrl(docKey),
-        msg;
-
-    $.ajax({
-      url: connectionUrl,
-      dataType: 'json',
-      success: function(res, status, xhr) {
-        tableau.dataCache = res;
-        retrieveDataCallback(tableau.dataCache);
-      },
-      error: function (xhr, ajaxOptions, thrownError) {
-        msg = "error connecting to Google Spreadsheets: " + xhr.responseText + "\n" + thrownError;
-        tableau.abortWithError(msg);
-      }
-    });
   }
 
 })(jQuery, tableau, wdcw);

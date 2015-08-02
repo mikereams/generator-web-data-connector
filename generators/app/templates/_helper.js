@@ -11,6 +11,20 @@ var wdcw = window.wdcw || {};
    *   have to know to pull it from the global tableau object.
    */
   connector.init = function callConnectorInit() {
+    var data = this.getConnectionData(),
+        $input,
+        key;
+
+    // Auto-fill any inputs with known data values.
+    for (key in data) {
+      if (data.hasOwnProperty(key)) {
+        $input = $('*[name="' + key + '"]');
+        if ($input.length) {
+          $input.val(data[key]);
+        }
+      }
+    }
+
     // If the provided connector wrapper has a setup property, call it with the
     // current initialization phase.
     if (wdcw.hasOwnProperty('setup')) {
@@ -73,6 +87,38 @@ var wdcw = window.wdcw || {};
     });
   };
 
+  /**
+   * Extension of the web data connector API that handles complex connection
+   * data getting for the implementor.
+   *
+   * @returns {object}
+   *   An object representing connection data. Keys are assumed to be form input
+   *   names; values are assumed to be form input values.
+   *
+   * @see connector.setConnectionData
+   */
+  connector.getConnectionData = function getConnectionData() {
+    return tableau.connectionData ? JSON.parse(tableau.connectionData) : {};
+  };
+
+  /**
+   * Extension of the web data connector API that handles complex connection
+   * data setting for the implementor.
+   *
+   * @param {object} data
+   *   The data that's intended to be set for this connection. Keys are assumed
+   *   to be form input names; values are assumed to be form input values.
+   *
+   * @returns {object}
+   *   Returns the data that was set.
+   *
+   * @see connector.getConnectionData
+   */
+  connector.setConnectionData = function setConnectionData(data) {
+    tableau.connectionData = JSON.stringify(data);
+    return data;
+  };
+
   // Register our connector, which uses logic from the connector wrapper.
   tableau.registerConnector(connector);
 
@@ -83,26 +129,34 @@ var wdcw = window.wdcw || {};
    * - Provide the connection name.
    * - Trigger the data collection phase of the web data connector.
    */
-  $(document).ready(function connectorDocumentReady(){
-    $("form").submit(function connectorFormSubmitHandler(e) {
-      // @todo Remove specifics of the Google Spreadsheets example, make generic.
-      var $textField = $('input[type=text]'),
-          inputUrl = $textField.val(),
-          paramName = 'key',
-          regex = new RegExp("[\\?&]" + paramName + "=([^&#]*)"),
-          results = regex.exec(inputUrl),
-          connectionData = results == null ? inputUrl : decodeURIComponent(results[1].replace(/\+/g, " "));
+  $(document).ready(function connectorDocumentReady() {
+    $('form').submit(function connectorFormSubmitHandler(e) {
+      var $fields = $('input[type="text"], select, textarea'),
+          data = {};
 
       e.preventDefault();
 
-      if (!$textField || $textField.length == 0) {
+      // Format connection data according to assumptions.
+      $fields.map(function getValuesFromFields() {
+        var $this = $(this);
+            name = $this.attr('name');
+        if (name) {
+          data[name] = $this.val();
+        }
+        return this;
+      });
+
+      // If nothing was entered, there was a problem. Abort.
+      // @todo Automatically add validation handling.
+      if (data === {}) {
         return false;
       }
 
-      // @todo Create a getter/setter method to automatically JSON.parse and
-      // stringify, making the assumption that all data will be stored as such.
-      tableau.connectionData = connectionData;
+      // Set connection data and connection name.
+      connector.setConnectionData(data);
       tableau.connectionName = '<%= props.name %>';
+
+      // Initiate the data retrieval process.
       tableau.submit();
     });
   });
