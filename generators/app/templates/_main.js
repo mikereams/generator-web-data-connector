@@ -22,6 +22,14 @@ var wdcw = window.wdcw || {};
   };
 
   /**
+   * Run when the web data connector is being unloaded. Useful if you need
+   * custom logic to clean up resources or perform other shutdown tasks.
+   */
+  wdcw.teardown = function teardown() {
+    <%= props.tearDown ? props.tearDown.trim() : '' %>
+  };
+
+  /**
    * Primary method called when Tableau is asking for the column headers that
    * this web data connector provides. Takes a single callable argument that you
    * should call with the headers you've retrieved.
@@ -57,14 +65,6 @@ var wdcw = window.wdcw || {};
    */
   wdcw.tableData = function tableData(registerData) {
     <%= props.tableData ? props.tableData.trim() : '' %>
-  };
-
-  /**
-   * Run when the web data connector is being unloaded. Useful if you need
-   * custom logic to clean up resources or perform other shutdown tasks.
-   */
-  wdcw.teardown = function teardown() {
-    <%= props.tearDown ? props.tearDown.trim() : '' %>
   };
 
   <%= props.privateMethods ? props.privateMethods.trim() : '' %>

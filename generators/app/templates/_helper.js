@@ -9,6 +9,8 @@ var wdcw = window.wdcw || {};
    *   tableau.initCallback method.
    * - Passes the current phase directly to the initializer so that it doesn't
    *   have to know to pull it from the global tableau object.
+   * - Handles population of saved data on behalf of the implementor during the
+   *   interactive phase.
    */
   connector.init = function callConnectorInit() {
     var data = this.getConnectionData(),
@@ -16,11 +18,13 @@ var wdcw = window.wdcw || {};
         key;
 
     // Auto-fill any inputs with known data values.
-    for (key in data) {
-      if (data.hasOwnProperty(key)) {
-        $input = $('*[name="' + key + '"]');
-        if ($input.length) {
-          $input.val(data[key]);
+    if (tableau.phase === tableau.phaseEnum.interactivePhase) {
+      for (key in data) {
+        if (data.hasOwnProperty(key)) {
+          $input = $('*[name="' + key + '"]');
+          if ($input.length) {
+            $input.val(data[key]);
+          }
         }
       }
     }
