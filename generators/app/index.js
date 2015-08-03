@@ -1,15 +1,23 @@
 'use strict';
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var _ = require('underscore.string');
+
+var yeoman = require('yeoman-generator'),
+    chalk = require('chalk'),
+    yosay = require('yosay'),
+    _ = require('underscore.string');
 
 module.exports = yeoman.generators.Base.extend({
+
+  constructor: function () {
+    yeoman.generators.Base.apply(this, arguments);
+    this.props = {};
+
+    // Add support for a `--demo` flag.
+    this.option('demo');
+  },
 
   initializing: function() {
     this.pkg = require('../../package.json');
     this.author = this.user.git.name();
-    this.props = {};
   },
 
   prompting: function () {
@@ -26,18 +34,28 @@ module.exports = yeoman.generators.Base.extend({
       ' app generator!'
     ));
 
-    this.currentYear = (new Date()).getFullYear();
-
-    this.prompt(prompts, function (props) {
-      props.name = props.name.replace(/\"/g, '\\"');
-      props.appname = _.slugify(props.name);
-      this.props = props;
+    if (!this.options.demo) {
+      this.prompt(prompts, function (props) {
+        props.name = props.name.replace(/\"/g, '\\"');
+        props.appname = _.slugify(props.name);
+        this.props = props;
+        done();
+      }.bind(this));
+    }
+    else {
+      this.log('Generating demo connector for you...');
+      this.props = {
+        name: 'Google Spreadsheets Connector Demo',
+        appname: 'google-spreadsheets-connector-demo'
+      };
       done();
-    }.bind(this));
+    }
   },
 
   writing: {
+
     app: function () {
+      this._populateTemplateVars();
       this.template('_package.json', 'package.json');
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
@@ -69,6 +87,30 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('tableauwdc-1.1.0.js'),
       this.destinationPath('/bower_components/tableau/dist/tableauwdc-1.1.0.js')
     );
+  },
+
+  _populateTemplateVars: function () {
+    var that = this,
+        templateFiles = [
+          'helpText.html',
+          'form.html',
+          'setUp.js',
+          'columnHeaders.js',
+          'tableData.js',
+          'privateMethods.js',
+          'tearDown.js'
+        ],
+        folder = this.options.demo ? 'demo' : 'default';
+
+    templateFiles.forEach(function (file) {
+      var templateVar = file.split('.')[0];
+      try {
+        that.props[templateVar] = that.fs.read(that.templatePath(folder + '/' + file));
+      }
+      catch (e) {
+        that.props[templateVar] = '';
+      }
+    });
   }
 
 });

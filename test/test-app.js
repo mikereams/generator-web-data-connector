@@ -1,11 +1,11 @@
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
-var os = require('os');
+var path = require('path'),
+    assert = require('yeoman-generator').assert,
+    helpers = require('yeoman-generator').test,
+    os = require('os');
 
-describe('twdc:app', function () {
+describe('web-data-connector:app', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true })
@@ -18,7 +18,10 @@ describe('twdc:app', function () {
       'bower.json',
       'package.json',
       '.editorconfig',
-      '.jshintrc'
+      '.jshintrc',
+      'index.html',
+      'src/main.js',
+      'src/helper.js'
     ]);
   });
 });
