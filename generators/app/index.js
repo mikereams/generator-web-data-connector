@@ -10,6 +10,15 @@ module.exports = yeoman.generators.Base.extend({
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
     this.props = {};
+    this.templateVars = {
+      helpText: '',
+      form: '',
+      setUp: '',
+      columnHeaders: '',
+      tableData: '',
+      privateMethods: '',
+      tearDown: ''
+    };
 
     // Add support for a `--demo` flag.
     this.option('demo');
@@ -26,6 +35,24 @@ module.exports = yeoman.generators.Base.extend({
           name: 'name',
           message: 'What would you like to call this connector?',
           default: 'My Web Data Connector'
+        }, {
+          name: 'authentication',
+          type: 'list',
+          message: 'Does your connector require user authentication?',
+          choices: [{
+            name: 'No authentication required',
+            value: 'none'
+          }, {
+            name: 'Token-based authentication (bearer token, JWT, etc.)',
+            value: 'token'
+          }, {
+            name: 'Basic/digest authentication (username and pasword)',
+            value: 'basic'
+          }, {
+            name: 'OAuth',
+            value: 'oauth'
+          }],
+          default: 'none'
         }];
 
     // Have Yeoman greet the user.
@@ -91,26 +118,51 @@ module.exports = yeoman.generators.Base.extend({
 
   _populateTemplateVars: function () {
     var that = this,
-        templateFiles = [
-          'helpText.html',
-          'form.html',
-          'setUp.js',
-          'columnHeaders.js',
-          'tableData.js',
-          'privateMethods.js',
-          'tearDown.js'
-        ],
-        folder = this.options.demo ? 'demo' : 'default';
+        templateFiles = this._evaluateTemplateFolders();
 
     templateFiles.forEach(function (file) {
-      var templateVar = file.split('.')[0];
+      var templateVar = file.name.split('.')[0];
       try {
-        that.props[templateVar] = that.fs.read(that.templatePath(folder + '/' + file));
+        that.templateVars[templateVar] = that.fs.read(that.templatePath(file.folder + '/' + file.name));
       }
       catch (e) {
-        that.props[templateVar] = '';
+        // Do nothing. Defaults are already populated.
       }
     });
+  },
+
+  _evaluateTemplateFolders: function () {
+    var templateFiles = [{
+          name: 'helpText.html',
+          folder: 'default'
+        }, {
+          name: 'form.html',
+          folder: 'default'
+        }, {
+          name: 'setUp.js',
+          folder: 'default'
+        }, {
+          name: 'columnHeaders.js',
+          folder: 'default'
+        }, {
+          name: 'tableData.js',
+          folder: 'default'
+        }, {
+          name: 'privateMethods.js',
+          folder: 'default'
+        }, {
+          name: 'tearDown.js',
+          folder: 'default'
+        }];
+
+    // If a simple demo was requested, swap to the demo folder.
+    if (this.options.demo) {
+      templateFiles.forEach(function (file, index) {
+        templateFiles[index].folder = 'demo';
+      });
+    }
+
+    return templateFiles;
   }
 
 });
