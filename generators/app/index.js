@@ -46,7 +46,7 @@ module.exports = yeoman.generators.Base.extend({
             name: 'Token-based authentication (bearer token, JWT, etc.)',
             value: 'token'
           }, {
-            name: 'Basic/digest authentication (username and pasword)',
+            name: 'Basic/digest authentication (username and password)',
             value: 'basic'
           }, {
             name: 'OAuth',
@@ -132,7 +132,8 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   _evaluateTemplateFolders: function () {
-    var templateFiles = [{
+    var that = this,
+        templateFiles = [{
           name: 'helpText.html',
           folder: 'default'
         }, {
@@ -159,6 +160,15 @@ module.exports = yeoman.generators.Base.extend({
     if (this.options.demo) {
       templateFiles.forEach(function (file, index) {
         templateFiles[index].folder = 'demo';
+      });
+    }
+
+    // If token-based authentication is requested, swap out the files.
+    if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
+      templateFiles.forEach(function (file, index) {
+        if (['columnHeaders.js', 'form.html', 'tableData.js'].indexOf(file.name) !== -1) {
+          templateFiles[index].folder = 'auth-' + that.props.authentication;
+        }
       });
     }
 
