@@ -24,8 +24,12 @@ var wdcw = window.wdcw || {};
   /**
    * Run when the web data connector is being unloaded. Useful if you need
    * custom logic to clean up resources or perform other shutdown tasks.
+   *
+   * @param {function} tearDownComplete
+   *   A callback function that you must call when all shutdown tasks have been
+   *   performed.
    */
-  wdcw.teardown = function teardown() {
+  wdcw.teardown = function teardown(tearDownComplete) {
     <%= templateVars.tearDown.trim() %>
   };
 

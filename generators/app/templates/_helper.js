@@ -50,13 +50,15 @@ var wdcw = window.wdcw || {};
    * - Makes it so that the implementor doesn't have to know to call the
    *   tableau.shutdownCallback method.
    * - Mirrors the wrapped init callback for naming simplicity (setup/teardown).
+   * - Unifies the callback-based API of all connector wrapper methods.
    */
   connector.shutDown = function callConnectorShutdown() {
     // If the provided connector wrapper has a teardown property, call it.
     if (wdcw.hasOwnProperty('teardown')) {
-      wdcw.teardown.call(this);
+      wdcw.teardown.call(this, function shutDownComplete() {
+        tableau.shutdownCallback();
+      });
     }
-    tableau.shutdownCallback();
   };
 
   /**
