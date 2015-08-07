@@ -2,6 +2,9 @@
       case tableau.phaseEnum.interactivePhase:
         // Perform set up tasks that relate to when the user will be prompted to
         // enter information interactively.
+
+        // Once done, be sure to signal that initialization is done.
+        setUpComplete();
         break;
 
       // Here, we just need to make sure we have a good OAuth access token.
@@ -10,8 +13,6 @@
         // it is no longer or will soon be invalid.
         if (tableau.password) {
           $.ajax({
-            // @todo Better support asynchronous calls like this in setup phase.
-            async: false,
             url: 'http://api.example.com/some/predictable/endpoint',
             headers: {
               Accept: 'application/json',
@@ -23,7 +24,10 @@
               // need to check its contents to determine token validity. That
               // logic should go here. If your condition fails, be sure to
               // attempt to retrieve a new access token.
-              if (!response.someConstraint) {
+              if (response.someConstraintPasses) {
+                setUpComplete();
+              }
+              else {
                 getNewAccessToken();
               }
 
@@ -40,4 +44,7 @@
           getNewAccessToken();
         }
         break;
+
+      default:
+        setUpComplete();
     }

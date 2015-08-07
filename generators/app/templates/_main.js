@@ -16,8 +16,11 @@ var wdcw = window.wdcw || {};
    *   - tableau.phaseEnum.authPhase: Indicates when the connector is being
    *     accessed in a stripped down context for the sole purpose of refreshing
    *     an OAuth authentication token.
+   * @param {function} setUpComplete
+   *   A callback function that you must call when all setup tasks have been
+   *   performed.
    */
-  wdcw.setup = function setup(phase) {
+  wdcw.setup = function setup(phase, setUpComplete) {
     <%= templateVars.setUp.trim() %>
   };
 

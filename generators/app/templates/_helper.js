@@ -11,6 +11,8 @@ var wdcw = window.wdcw || {};
    *   have to know to pull it from the global tableau object.
    * - Handles population of saved data on behalf of the implementor during the
    *   interactive phase.
+   * - Unifies the callback-based API of all connector wrapper methods, and
+   *   simplifies asynchronous set-up tasks in the process.
    */
   connector.init = function callConnectorInit() {
     var data = this.getConnectionData(),
@@ -40,9 +42,13 @@ var wdcw = window.wdcw || {};
     // If the provided connector wrapper has a setup property, call it with the
     // current initialization phase.
     if (wdcw.hasOwnProperty('setup')) {
-      wdcw.setup.call(this, tableau.phase);
+      wdcw.setup.call(this, tableau.phase, function setUpComplete() {
+        tableau.initCallback();
+      });
     }
-    tableau.initCallback();
+    else {
+      tableau.initCallback();
+    }
   };
 
   /**
@@ -50,7 +56,8 @@ var wdcw = window.wdcw || {};
    * - Makes it so that the implementor doesn't have to know to call the
    *   tableau.shutdownCallback method.
    * - Mirrors the wrapped init callback for naming simplicity (setup/teardown).
-   * - Unifies the callback-based API of all connector wrapper methods.
+   * - Unifies the callback-based API of all connector wrapper methods, and
+   *   simplifies asynchronous tear-down tasks in the process.
    */
   connector.shutDown = function callConnectorShutdown() {
     // If the provided connector wrapper has a teardown property, call it.
@@ -58,6 +65,9 @@ var wdcw = window.wdcw || {};
       wdcw.teardown.call(this, function shutDownComplete() {
         tableau.shutdownCallback();
       });
+    }
+    else {
+      tableau.shutdownCallback();
     }
   };
 

@@ -17,3 +17,8 @@
         // refresh OAuth authentication tokens.
         break;
     }
+
+    // Always register when initialization tasks are complete by calling this.
+    // This can be especially useful when initialization tasks are asynchronous
+    // in nature.
+    setUpComplete();
