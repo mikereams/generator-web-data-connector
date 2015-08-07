@@ -163,11 +163,21 @@ module.exports = yeoman.generators.Base.extend({
       });
     }
 
-    // If token-based authentication is requested, swap out the files.
+    // If token-based or basic authentication is requested, swap out the files.
     if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
       templateFiles.forEach(function (file, index) {
         if (['columnHeaders.js', 'form.html', 'tableData.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
+        }
+      });
+    }
+
+    // If OAuth-based authentication is requested, swap out a slightly different
+    // set of files.
+    if (this.props.authentication === 'oauth') {
+      templateFiles.forEach(function (file, index) {
+        if (['form.html', 'privateMethods.js', 'setUp.js'].indexOf(file.name) !== -1) {
+          templateFiles[index].folder = 'auth-oauth';
         }
       });
     }
