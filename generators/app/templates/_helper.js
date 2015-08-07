@@ -27,6 +27,14 @@ var wdcw = window.wdcw || {};
           }
         }
       }
+
+      // Pre-populate username and password if stored values exist.
+      if (tableau.username) {
+        $('input[name="username"]').val(tableau.username);
+      }
+      if (tableau.password) {
+        $('input[type="password"]').val(tableau.password);
+      }
     }
 
     // If the provided connector wrapper has a setup property, call it with the
@@ -135,7 +143,9 @@ var wdcw = window.wdcw || {};
    */
   $(document).ready(function connectorDocumentReady() {
     $('form').submit(function connectorFormSubmitHandler(e) {
-      var $fields = $('input[type="text"], select, textarea'),
+      var $fields = $('input, select, textarea').not('[type="password"],[type="submit"],[name="username"]'),
+          $password = $('input[type="password"]'),
+          $username = $('input[name="username"]'),
           data = {};
 
       e.preventDefault();
@@ -159,6 +169,16 @@ var wdcw = window.wdcw || {};
       // Set connection data and connection name.
       connector.setConnectionData(data);
       tableau.connectionName = '<%= props.name %>';
+
+      // If there was a password, set the password.
+      if ($password) {
+        tableau.password = $password.val();
+      }
+
+      // If there was a username, set the username.
+      if ($username) {
+        tableau.username = $username.val();
+      }
 
       // Initiate the data retrieval process.
       tableau.submit();

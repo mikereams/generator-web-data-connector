@@ -18,7 +18,7 @@ var wdcw = window.wdcw || {};
    *     an OAuth authentication token.
    */
   wdcw.setup = function setup(phase) {
-    <%= props.setUp ? props.setUp.trim() : '' %>
+    <%= templateVars.setUp.trim() %>
   };
 
   /**
@@ -26,7 +26,7 @@ var wdcw = window.wdcw || {};
    * custom logic to clean up resources or perform other shutdown tasks.
    */
   wdcw.teardown = function teardown() {
-    <%= props.tearDown ? props.tearDown.trim() : '' %>
+    <%= templateVars.tearDown.trim() %>
   };
 
   /**
@@ -47,7 +47,7 @@ var wdcw = window.wdcw || {};
    *   ]);
    */
   wdcw.columnHeaders = function columnHeaders(registerHeaders) {
-    <%= props.columnHeaders ? props.columnHeaders.trim() : '' %>
+    <%= templateVars.columnHeaders.trim() %>
   };
 
   /**
@@ -64,9 +64,9 @@ var wdcw = window.wdcw || {};
    *   ]});
    */
   wdcw.tableData = function tableData(registerData) {
-    <%= props.tableData ? props.tableData.trim() : '' %>
+    <%= templateVars.tableData.trim() %>
   };
 
-  <%= props.privateMethods ? props.privateMethods.trim() : '' %>
+  <%= templateVars.privateMethods.trim() %>
 
 })(jQuery, tableau, wdcw);
