@@ -1,3 +1,10 @@
+/**
+ * @file
+ *   A utility that wraps the Tableau Web Data Connector API into something with
+ *   more opinionated, and simple for beginners. Also takes care of very common
+ *   setup and event handling boilerplate.
+ */
+
 var wdcw = window.wdcw || {};
 
 (function($, tableau, wdcw) {

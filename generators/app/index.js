@@ -86,7 +86,7 @@ module.exports = yeoman.generators.Base.extend({
       this.template('_package.json', 'package.json');
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
-      this.template('_helper.js', 'src/helper.js');
+      this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
     },
 

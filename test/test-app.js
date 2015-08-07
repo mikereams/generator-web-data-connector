@@ -21,7 +21,7 @@ describe('web-data-connector:app', function () {
       '.jshintrc',
       'index.html',
       'src/main.js',
-      'src/helper.js'
+      'src/wrapper.js'
     ]);
   });
 });

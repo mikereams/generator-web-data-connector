@@ -24,6 +24,7 @@ module.exports = function(grunt) {
           'bower_components/jquery/dist/jquery.js',
           'bower_components/tableau/dist/*.js',
           'bower_components/material-design-lite/material.js',
+          'src/wrapper.js',
           'src/**/*.js'
         ],
         dest: 'build/all.js'
