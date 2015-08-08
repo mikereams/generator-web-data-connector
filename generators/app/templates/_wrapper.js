@@ -105,17 +105,28 @@ var wdcw = window.wdcw || {};
 
   /**
    * Simplifies (and limits) the connector.getTableData method in a couple ways:
-   * - Enables simpler asynchronous handling by making the interface only accept
-   *   a callback.
-   * - Removes the complexity introduced by allowing tableau to be aware of
-   *   data paging. It's simpler to let the implementor control that logic.
+   * - Enables simpler asynchronous handling by providing a callback.
+   * - Simplifies chunked/paged data handling by limiting the arguments that the
+   *   implementor needs to be aware of to just 1) the data retrieved and 2) if
+   *   paging functionality is needed, a token for the last record.
    * - Makes it so the implementor doesn't have to know to call the
    *   tableau.dataCallback method.
+   *
+   * @param {string} lastRecordToken
+   *   The token provided by the implementor representing the last record or
+   *   page retrieved.
    */
-  connector.getTableData = function callConnectorTableData() {
-    wdcw.tableData.call(this, function getTableDataSuccess(data) {
-      tableau.dataCallback(data, null, false);
-    });
+  connector.getTableData = function callConnectorTableData(lastRecordToken) {
+    wdcw.tableData.call(this, function getTableDataSuccess(data, lastToken) {
+      // If there are more records to be returned, indicate as such to Tableau.
+      if (lastToken) {
+        tableau.dataCallback(data, lastToken, true);
+      }
+      // If no more records need to be retrieved, indicate as such to Tableau.
+      else {
+        tableau.dataCallback(data, null, false);
+      }
+    }, lastRecordToken);
   };
 
   /**
