@@ -57,20 +57,39 @@ var wdcw = window.wdcw || {};
     <%= templateVars.columnHeaders.trim() %>
   };
 
+
   /**
    * Primary method called when Tableau is asking for your web data connector's
-   * data. Takes a single callable argument that you should call with all of the
-   * data you've retrieved.
+   * data. Takes a callable argument that you should call with all of the
+   * data you've retrieved. You may optionally pass a token as a second argument
+   * to support paged/chunked data retrieval.
    *
-   * @param {function(Array<{object}>)} registerData
+   * @param {function(Array<{object}>, {string})} registerData
    *   A callback function that takes an array of objects as its sole argument.
    *   Each object should be a simple key/value map of column name to column
    *   value. For example, you might call the callback in the following way:
    *   registerData([
    *     {'String Column': 'String Column Value', 'Integer Column': 123}
    *   ]});
+   *
+   *   It's possible that the API you're interacting with supports some mechanism
+   *   for paging or filtering. To simplify the process of making several paged
+   *   calls to your API, you may optionally pass a second argument in your call
+   *   to the registerData callback. This argument should be a string token that
+   *   represents the last record you retrieved.
+   *
+   *   If provided, your implementation of the tableData method will be called
+   *   again, this time with the token you provide here. Once all data has been
+   *   retrieved, pass null, false, 0, or an empty string.
+   *
+   * @param {string} lastRecord
+   *   Optional. If you indicate in the call to registerData that more data is
+   *   available (by passing a token representing the last record retrieved),
+   *   then the lastRecord argument will be populated with the token that you
+   *   provided. Use this to update/modify the API call you make to handle
+   *   pagination or filtering.
    */
-  wdcw.tableData = function tableData(registerData) {
+  wdcw.tableData = function tableData(registerData, lastRecord) {
     <%= templateVars.tableData.trim() %>
   };
 

@@ -1,11 +1,13 @@
     // Do the same to retrieve your actual data.
     $.ajax({
-      url: "https://api.example.com/path/to/your/data",
+      url: buildApiFrom('path/to/your/data', {last: lastRecord}),
       headers: {
         Authorization: 'Basic ' + btoa(tableau.username + ':' + tableau.password)
       },
       success: function dataRetrieved(response) {
-        var processedData = [];
+        var processedData = [],
+            // Determine if more data is available via paging.
+            moreData = response.meta.page < response.meta.pages;
 
         // You may need to perform processing to shape the data into an array of
         // objects where each object is a map of column names to values.
@@ -17,7 +19,15 @@
         });
 
         // Once you've retrieved your data and shaped it into the form expected,
-        // just call the registerData function.
-        registerData(processedData);
+        // call the registerData function. If more data can be retrieved, then
+        // supply a token to inform further paged requests.
+        // @see buildApiFrom()
+        if (moreData) {
+          registerData(processedData, response.meta.page);
+        }
+        // Otherwise, just register the response data with the callback.
+        else {
+          registerData(processedData);
+        }
       }
     });
