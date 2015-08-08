@@ -190,12 +190,12 @@ var wdcw = window.wdcw || {};
       tableau.connectionName = '<%= props.name %>';
 
       // If there was a password, set the password.
-      if ($password) {
+      if ($password.length) {
         tableau.password = $password.val();
       }
 
       // If there was a username, set the username.
-      if ($username) {
+      if ($username.length) {
         tableau.username = $username.val();
       }
 
