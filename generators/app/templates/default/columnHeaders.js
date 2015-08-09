@@ -2,7 +2,10 @@
     // pass statically, like this:
     registerHeaders([{
       name: 'column1',
-      type: 'int'
+      type: 'int',
+      // If your connector supports incremental refreshing, indicate the column
+      // on which the refresh should be based like this:
+      incrementalRefresh: true
     }, {
       name: 'column2',
       type: 'string'

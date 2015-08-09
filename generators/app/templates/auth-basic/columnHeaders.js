@@ -16,7 +16,10 @@
           if (response.properties.hasOwnProperty(propName)) {
             processedColumns.push({
               name: propName,
-              type: response.properties[propName].type
+              type: response.properties[propName].type,
+              // If your connector supports incremental extract refreshes, you
+              // can indicate the column to use for refreshing like this:
+              incrementalRefresh: propName === 'entityId'
             });
           }
         }
