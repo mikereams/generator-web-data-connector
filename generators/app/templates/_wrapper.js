@@ -84,6 +84,8 @@ var wdcw = window.wdcw || {};
    *   a callback.
    * - Simplifies the API by expecting an array of objects, mapping field names
    *   and types on a single object, rather than in two separate arrays.
+   * - Simplifies incremental refresh handling by bundling this as a declarative
+   *   property in the column header object.
    * - Makes it so the implementor doesn't have to know to call the
    *   tableau.headersCallback method.
    */
@@ -97,7 +99,12 @@ var wdcw = window.wdcw || {};
       headers.forEach(function(header) {
         names.push(header.name);
         types.push(header.type);
-      });
+
+        // If a column is marked as incremental refresh key, then set it.
+        if (header.incrementalRefresh) {
+          this.setIncrementalExtractColumn(header.name);
+        }
+      }, this);
 
       tableau.headersCallback(names, types);
     });
@@ -159,6 +166,28 @@ var wdcw = window.wdcw || {};
   connector.setConnectionData = function setConnectionData(data) {
     tableau.connectionData = JSON.stringify(data);
     return data;
+  };
+
+  /**
+   * Extension of the web data connector API that gets the incremental extract
+   * column.
+   */
+  connector.getIncrementalExtractColumn = function getIncrementalExtractColumn() {
+    return tableau.incrementalExtractColumn;
+  };
+
+  /**
+   * Extension of the web data connectors API that sets the incremental extract
+   * column.
+   *
+   * @param {string} column
+   *   The column from the data source on which incremental extracts should be
+   *   based. This can be a column that represents either a DateTime or an
+   *   integer.
+   */
+  connector.setIncrementalExtractColumn = function setIncrementalExtractColumn(column) {
+    tableau.incrementalExtractColumn = column;
+    return column;
   };
 
   // Register our connector, which uses logic from the connector wrapper.

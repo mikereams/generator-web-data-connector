@@ -41,7 +41,7 @@ var wdcw = window.wdcw || {};
    * this web data connector provides. Takes a single callable argument that you
    * should call with the headers you've retrieved.
    *
-   * @param {function(Array<{name, type}>)} registerHeaders
+   * @param {function(Array<{name, type, incrementalRefresh}>)} registerHeaders
    *   A callback function that takes an array of objects as its sole argument.
    *   For example, you might call the callback in the following way:
    *   registerHeaders([
@@ -51,6 +51,15 @@ var wdcw = window.wdcw || {};
    *     {name: 'Float Column', type: 'float'},
    *     {name: 'Integer Column', type: 'int'},
    *     {name: 'String Column', type: 'string'}
+   *   ]);
+   *
+   *   Note: to enable support for incremental extract refreshing, add a third
+   *   key (incrementalRefresh) to the header object. Candidate columns for
+   *   incremental refreshes must be of type datetime or integer. During an
+   *   incremental refresh attempt, the most recent value for the given column
+   *   will be passed as "lastRecord" to the tableData method. For example:
+   *   registerHeaders([
+   *     {name: 'DateTime Column', type: 'datetime', incrementalRefresh: true}
    *   ]);
    */
   wdcw.columnHeaders = function columnHeaders(registerHeaders) {
@@ -88,6 +97,11 @@ var wdcw = window.wdcw || {};
    *   then the lastRecord argument will be populated with the token that you
    *   provided. Use this to update/modify the API call you make to handle
    *   pagination or filtering.
+   *
+   *   If you indicated a column in wdcw.columnHeaders suitable for use during
+   *   an incremental extract refresh, the last value of the given column will
+   *   be passed as the value of lastRecord when an incremental refresh is
+   *   triggered.
    */
   wdcw.tableData = function tableData(registerData, lastRecord) {
     <%= templateVars.tableData.trim() %>
