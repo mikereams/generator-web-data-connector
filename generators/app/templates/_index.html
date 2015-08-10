@@ -12,10 +12,14 @@
 </div>
 <div class="demo-grid-1 mdl-grid">
     <div class="mdl-cell mdl-cell--4-col" style="word-wrap:break-word;">
-        <%= templateVars.helpText.trim() %>
+        <% if (templateIncs.helpText) { %>
+            <%= include(templateIncs.helpText) %>
+        <% } %>
     </div>
     <div class="mdl-cell mdl-cell--8-col">
-        <%= templateVars.form.trim() %>
+        <% if (templateIncs.form) { %>
+            <%= include(templateIncs.form) %>
+        <% } %>
     </div>
 </div>
 

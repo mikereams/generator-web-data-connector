@@ -3,21 +3,23 @@
 var yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
     yosay = require('yosay'),
-    _ = require('underscore.string');
+    _ = require('underscore.string'),
+    u = require('underscore');
 
 module.exports = yeoman.generators.Base.extend({
 
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
     this.props = {};
-    this.templateVars = {
+    this.templateIncs = {
       helpText: '',
       form: '',
       setUp: '',
       columnHeaders: '',
       tableData: '',
       privateMethods: '',
-      tearDown: ''
+      tearDown: '',
+      _selectField: this.templatePath('fields/_selectField.html')
     };
 
     // Add support for a `--demo` flag.
@@ -25,12 +27,21 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   initializing: function() {
+    var that = this;
+
     this.pkg = require('../../package.json');
     this.author = this.user.git.name();
+
+    // Helper function for use within templates to render sub-templates...
+    this.include = function (path) {
+      var compiled = u.template(this.fs.read(path));
+      return compiled(that);
+    };
   },
 
   prompting: function () {
     var done = this.async(),
+        userWantsSelectList = function (props) {return props.hasSelectOption;},
         prompts = [{
           name: 'name',
           message: 'What would you like to call this connector?',
@@ -53,6 +64,26 @@ module.exports = yeoman.generators.Base.extend({
             value: 'oauth'
           }],
           default: 'none'
+        }, {
+          name: 'hasSelectOption',
+          message: 'Does your connector need an options list?',
+          type: 'confirm',
+          default: false
+        }, {
+          name: 'selectOptionName',
+          message: "What's the list for?",
+          default: 'Pizza toppings',
+          when: userWantsSelectList
+        }, {
+          name: 'selectOptionValues',
+          message: 'What options should be made available?',
+          default: 'Cheese, Mushroom, Bacon',
+          when: userWantsSelectList,
+          filter: function (optionValues) {
+            return optionValues.split(',').map(function(option) {
+              return option.trim();
+            });
+          }
         }];
 
     // Have Yeoman greet the user.
@@ -82,7 +113,7 @@ module.exports = yeoman.generators.Base.extend({
   writing: {
 
     app: function () {
-      this._populateTemplateVars();
+      this._populateTemplateIncs();
       this.template('_package.json', 'package.json');
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
@@ -116,17 +147,16 @@ module.exports = yeoman.generators.Base.extend({
     );
   },
 
-  _populateTemplateVars: function () {
+  _populateTemplateIncs: function () {
     var that = this,
         templateFiles = this._evaluateTemplateFolders();
 
     templateFiles.forEach(function (file) {
-      var templateVar = file.name.split('.')[0];
-      try {
-        that.templateVars[templateVar] = that.fs.read(that.templatePath(file.folder + '/' + file.name));
-      }
-      catch (e) {
-        // Do nothing. Defaults are already populated.
+      var templateInc = file.name.split('.')[0],
+          templateFile = that.templatePath(file.folder + '/' + file.name);
+
+      if (that.fs.exists(templateFile)) {
+        that.templateIncs[templateInc] = templateFile;
       }
     });
   },

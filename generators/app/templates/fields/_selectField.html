@@ -1,0 +1,10 @@
+<% if (props.hasSelectOption) { %>
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <select class="mdl-textfield__input" name="<%= props.selectOptionName %>">
+        <% props.selectOptionValues.forEach(function(value){ %>
+            <option value="<%= value.trim() %>"><%= value %></option>
+        <% }); %>
+    </select>
+    <label class="mdl-textfield__label" for="<%= props.selectOptionName %>"><%= props.selectOptionName %></label>
+</div>
+<% } %>

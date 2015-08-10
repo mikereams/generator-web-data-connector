@@ -21,7 +21,7 @@ var wdcw = window.wdcw || {};
    *   performed.
    */
   wdcw.setup = function setup(phase, setUpComplete) {
-    <%= templateVars.setUp.trim() %>
+    <%= templateIncs.setUp ? include(templateIncs.setUp).trim() : '' %>
   };
 
   /**
@@ -33,7 +33,7 @@ var wdcw = window.wdcw || {};
    *   performed.
    */
   wdcw.teardown = function teardown(tearDownComplete) {
-    <%= templateVars.tearDown.trim() %>
+    <%= templateIncs.tearDown ? include(templateIncs.tearDown).trim() : '' %>
   };
 
   /**
@@ -63,7 +63,7 @@ var wdcw = window.wdcw || {};
    *   ]);
    */
   wdcw.columnHeaders = function columnHeaders(registerHeaders) {
-    <%= templateVars.columnHeaders.trim() %>
+    <%= templateIncs.columnHeaders ? include(templateIncs.columnHeaders).trim() : '' %>
   };
 
 
@@ -104,9 +104,9 @@ var wdcw = window.wdcw || {};
    *   triggered.
    */
   wdcw.tableData = function tableData(registerData, lastRecord) {
-    <%= templateVars.tableData.trim() %>
+    <%= templateIncs.tableData ? include(templateIncs.tableData).trim() : '' %>
   };
 
-  <%= templateVars.privateMethods.trim() %>
+  <%= templateIncs.privateMethods ? include(templateIncs.privateMethods).trim() : '' %>
 
 })(jQuery, tableau, wdcw);
