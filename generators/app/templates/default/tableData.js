@@ -1,3 +1,8 @@
+    <% if (props.hasSelectOption) { %>// Access select list options like this to tweak data gathering logic.
+    if (this.getConnectionData()['<%= props.selectOptionName %>'] === '<%= props.selectOptionValues[0] %>') {
+
+    }
+    <% } %>
     // Logic to retrieve your data goes here. For example:
     $.getJSON(buildApiFrom('your/endpoint', {last: lastRecord}), function(response) {
       var processedData = [],

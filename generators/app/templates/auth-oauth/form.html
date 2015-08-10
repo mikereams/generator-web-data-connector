@@ -1,4 +1,7 @@
         <!-- You may wish to dynamically generate this link on the client-side.
              Potentially, you may create completely secondary page to handle
              steps post-authentication. -->
+        <% if (props.hasSelectOption) { %>
+            <%= include(templateIncs._selectField).trim() %>
+        <% } %>
         <a href="https://api.example.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect=http://localhost:9001?flow=authed">Get started</a>
