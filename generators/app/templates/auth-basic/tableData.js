@@ -1,3 +1,8 @@
+    <% if (props.hasSelectOption) { %>// Access select list options like this to tweak data gathering logic.
+    if (this.getConnectionData()['<%= props.selectOptionName %>'] === '<%= props.selectOptionValues[0] %>') {
+
+    }
+    <% } %>
     // Do the same to retrieve your actual data.
     $.ajax({
       url: buildApiFrom('path/to/your/data', {last: lastRecord}),
