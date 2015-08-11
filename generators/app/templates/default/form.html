@@ -3,6 +3,9 @@
             <!-- Each option you provide to your user should be represented as
                  either an input, textarea, or select list. Each of these elements
                  must also include a "name" attribute. -->
+            <% if (props.hasInput) { %>
+                <%= include(templateIncs._inputField).trim() %>
+            <% } %>
             <% if (props.hasSelectOption) { %>
                 <%= include(templateIncs._selectField).trim() %>
             <% } %>

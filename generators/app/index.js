@@ -19,6 +19,7 @@ module.exports = yeoman.generators.Base.extend({
       tableData: '',
       privateMethods: '',
       tearDown: '',
+      _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
       _textareaField: this.templatePath('fields/_textareaField.html')
     };
@@ -44,6 +45,7 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async(),
         userWantsSelectList = function (props) {return props.hasSelectOption;},
         userWantsTextarea = function (props) {return props.hasTextarea;},
+        userWantsInput = function (props) {return props.hasInput;},
         prompts = [{
           name: 'name',
           message: 'What would you like to call this connector?',
@@ -66,6 +68,16 @@ module.exports = yeoman.generators.Base.extend({
             value: 'oauth'
           }],
           default: 'none'
+        }, {
+          name: 'hasInput',
+          message: 'Does your connector need a text field?',
+          type: 'confirm',
+          default: false
+        }, {
+          name: 'inputName',
+          message: "What's the input for?",
+          default: 'Filter value',
+          when: userWantsInput
         }, {
           name: 'hasSelectOption',
           message: 'Does your connector need an options list?',

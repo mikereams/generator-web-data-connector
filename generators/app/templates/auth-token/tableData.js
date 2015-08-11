@@ -1,3 +1,8 @@
+    <% if (props.hasInput) { %>// Access your input option like this to tweak data gathering logic.
+    if (this.getConnectionData()['<%= props.inputName %>']) {
+
+    }
+    <% } %>
     <% if (props.hasSelectOption) { %>// Access select list options like this to tweak data gathering logic.
     if (this.getConnectionData()['<%= props.selectOptionName %>'] === '<%= props.selectOptionValues[0] %>') {
 
