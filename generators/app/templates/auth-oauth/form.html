@@ -1,6 +1,9 @@
         <!-- You may wish to dynamically generate this link on the client-side.
              Potentially, you may create completely secondary page to handle
              steps post-authentication. -->
+        <% if (props.hasInput) { %>
+            <%= include(templateIncs._inputField).trim() %>
+        <% } %>
         <% if (props.hasSelectOption) { %>
             <%= include(templateIncs._selectField).trim() %>
         <% } %>
