@@ -6,6 +6,9 @@
             <% if (props.hasSelectOption) { %>
                 <%= include(templateIncs._selectField).trim() %>
             <% } %>
+            <% if (props.hasTextarea) { %>
+                <%= include(templateIncs._textareaField).trim() %>
+            <% } %>
             <div>
                 <input type="submit" value="Connect" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" />
             </div>

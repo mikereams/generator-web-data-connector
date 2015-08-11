@@ -1,0 +1,6 @@
+<% if (props.hasTextarea) { %>
+<div class="mdl-textfield mdl-js-textfield">
+    <textarea class="mdl-textfield__input" type="text" rows="3" name="<%= props.textareaName %>"></textarea>
+    <label class="mdl-textfield__label" for="<%= props.textareaName %>"><%= props.textareaName %></label>
+</div>
+<% } %>
