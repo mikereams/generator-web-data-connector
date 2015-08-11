@@ -1,6 +1,6 @@
 <% if (props.hasInput) { %>
 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" type="text" rows="3" name="<%= props.inputName %>" id="<%= props.inputName %>" />
+    <input class="mdl-textfield__input" type="<%= props.inputName === 'password' ? 'password' : 'text' %>" name="<%= props.inputName %>" id="<%= props.inputName %>" />
     <label class="mdl-textfield__label" for="<%= props.inputName %>"><%= props.inputLabel %></label>
 </div>
 <% } %>

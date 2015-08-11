@@ -35,9 +35,9 @@ module.exports = yeoman.generators.Base.extend({
     this.author = this.user.git.name();
 
     // Helper function for use within templates to render sub-templates...
-    this.include = function (path) {
+    this.include = function (path, context) {
       var compiled = u.template(this.fs.read(path));
-      return compiled(that);
+      return compiled(context || that);
     };
   },
 
@@ -232,7 +232,7 @@ module.exports = yeoman.generators.Base.extend({
     // If token-based or basic authentication is requested, swap out the files.
     if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
       templateFiles.forEach(function (file, index) {
-        if (['_columnHeaders.js', '_form.html', '_tableData.js'].indexOf(file.name) !== -1) {
+        if (['_columnHeaders.js', '_tableData.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
         }
       });

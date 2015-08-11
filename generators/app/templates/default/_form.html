@@ -1,8 +1,4 @@
         <form>
-            <p>If your connector requires user interaction, you need a form here.</p>
-            <!-- Each option you provide to your user should be represented as
-                 either an input, textarea, or select list. Each of these elements
-                 must also include a "name" attribute. -->
             <% if (props.hasInput) { %>
                 <%= include(templateIncs._inputField).trim() %>
             <% } %>
@@ -11,6 +7,18 @@
             <% } %>
             <% if (props.hasTextarea) { %>
                 <%= include(templateIncs._textareaField).trim() %>
+            <% } %>
+            <% if (props.authentication !== 'none') { %>
+                <% if (props.authentication === 'basic') { %>
+                    <%= include(templateIncs._inputField, {props: {hasInput: true, inputName: 'username', inputLabel: 'Username'}}).trim() %>
+                <% } %>
+                <%= include(templateIncs._inputField, {props: {hasInput: true, inputName: 'password', inputLabel: 'Password or token'}}).trim() %>
+            <% } %>
+            <% if (!props.hasInput && !props.hasSelectOption && !props.hasTextarea && props.authentication === 'none') { %>
+            <p>If your connector requires user interaction, you need a form here.</p>
+            <!-- Each option you provide to your user should be represented as
+                 either an input, textarea, or select list. Each of these elements
+                 must also include a "name" attribute. -->
             <% } %>
             <div>
                 <input type="submit" value="Connect" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" />
