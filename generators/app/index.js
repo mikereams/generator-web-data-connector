@@ -120,6 +120,18 @@ module.exports = yeoman.generators.Base.extend({
       this.prompt(prompts, function (props) {
         props.name = props.name.replace(/\"/g, '\\"');
         props.appname = _.slugify(props.name);
+        if (props.hasInput) {
+          props.inputLabel = props.inputName;
+          props.inputName = _.classify(props.inputLabel);
+        }
+        if (props.hasSelectOption) {
+          props.selectOptionLabel = props.selectOptionName;
+          props.selectOptionName = _.classify(props.selectOptionLabel);
+        }
+        if (props.hasTextarea) {
+          props.textareaLabel = props.textareaName;
+          props.textareaName = _.classify(props.textareaLabel);
+        }
         this.props = props;
         done();
       }.bind(this));
