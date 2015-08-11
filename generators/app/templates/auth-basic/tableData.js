@@ -3,6 +3,11 @@
 
     }
     <% } %>
+    <% if (props.hasTextarea) { %>// Access your textarea option like this to tweak data gathering logic.
+    if (this.getConnectionData()['<%= props.textareaName %>']) {
+
+    }
+    <% } %>
     // Do the same to retrieve your actual data.
     $.ajax({
       url: buildApiFrom('path/to/your/data', {last: lastRecord}),
