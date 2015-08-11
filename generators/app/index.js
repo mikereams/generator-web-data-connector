@@ -19,7 +19,8 @@ module.exports = yeoman.generators.Base.extend({
       tableData: '',
       privateMethods: '',
       tearDown: '',
-      _selectField: this.templatePath('fields/_selectField.html')
+      _selectField: this.templatePath('fields/_selectField.html'),
+      _textareaField: this.templatePath('fields/_textareaField.html')
     };
 
     // Add support for a `--demo` flag.
@@ -42,6 +43,7 @@ module.exports = yeoman.generators.Base.extend({
   prompting: function () {
     var done = this.async(),
         userWantsSelectList = function (props) {return props.hasSelectOption;},
+        userWantsTextarea = function (props) {return props.hasTextarea;},
         prompts = [{
           name: 'name',
           message: 'What would you like to call this connector?',
@@ -84,6 +86,16 @@ module.exports = yeoman.generators.Base.extend({
               return option.trim();
             });
           }
+        }, {
+          name: 'hasTextarea',
+          message: 'Does your connector need a large text area?',
+          type: 'confirm',
+          default: false
+        }, {
+          name: 'textareaName',
+          message: "What's the text area for?",
+          default: 'JSON String',
+          when: userWantsTextarea
         }];
 
     // Have Yeoman greet the user.

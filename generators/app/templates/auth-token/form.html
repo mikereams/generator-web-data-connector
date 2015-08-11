@@ -5,6 +5,9 @@
             <% if (props.hasSelectOption) { %>
                 <%= include(templateIncs._selectField).trim() %>
             <% } %>
+            <% if (props.hasTextarea) { %>
+                <%= include(templateIncs._textareaField).trim() %>
+            <% } %>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="password" name="password" id="password" />
                 <label class="mdl-textfield__label" for="password">API Token</label>

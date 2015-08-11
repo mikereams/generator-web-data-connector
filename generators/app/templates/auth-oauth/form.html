@@ -4,4 +4,7 @@
         <% if (props.hasSelectOption) { %>
             <%= include(templateIncs._selectField).trim() %>
         <% } %>
+        <% if (props.hasTextarea) { %>
+            <%= include(templateIncs._textareaField).trim() %>
+        <% } %>
         <a href="https://api.example.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect=http://localhost:9001?flow=authed">Get started</a>
