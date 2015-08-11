@@ -12,13 +12,13 @@ module.exports = yeoman.generators.Base.extend({
     yeoman.generators.Base.apply(this, arguments);
     this.props = {};
     this.templateIncs = {
-      helpText: '',
-      form: '',
-      setUp: '',
-      columnHeaders: '',
-      tableData: '',
-      privateMethods: '',
-      tearDown: '',
+      _helpText: '',
+      _form: '',
+      _setUp: '',
+      _columnHeaders: '',
+      _tableData: '',
+      _privateMethods: '',
+      _tearDown: '',
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
       _textareaField: this.templatePath('fields/_textareaField.html')
@@ -200,25 +200,25 @@ module.exports = yeoman.generators.Base.extend({
   _evaluateTemplateFolders: function () {
     var that = this,
         templateFiles = [{
-          name: 'helpText.html',
+          name: '_helpText.html',
           folder: 'default'
         }, {
-          name: 'form.html',
+          name: '_form.html',
           folder: 'default'
         }, {
-          name: 'setUp.js',
+          name: '_setUp.js',
           folder: 'default'
         }, {
-          name: 'columnHeaders.js',
+          name: '_columnHeaders.js',
           folder: 'default'
         }, {
-          name: 'tableData.js',
+          name: '_tableData.js',
           folder: 'default'
         }, {
-          name: 'privateMethods.js',
+          name: '_privateMethods.js',
           folder: 'default'
         }, {
-          name: 'tearDown.js',
+          name: '_tearDown.js',
           folder: 'default'
         }];
 
@@ -232,7 +232,7 @@ module.exports = yeoman.generators.Base.extend({
     // If token-based or basic authentication is requested, swap out the files.
     if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
       templateFiles.forEach(function (file, index) {
-        if (['columnHeaders.js', 'form.html', 'tableData.js'].indexOf(file.name) !== -1) {
+        if (['_columnHeaders.js', '_form.html', '_tableData.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
         }
       });
@@ -242,7 +242,7 @@ module.exports = yeoman.generators.Base.extend({
     // set of files.
     if (this.props.authentication === 'oauth') {
       templateFiles.forEach(function (file, index) {
-        if (['form.html', 'privateMethods.js', 'setUp.js'].indexOf(file.name) !== -1) {
+        if (['_form.html', '_privateMethods.js', '_setUp.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-oauth';
         }
       });
