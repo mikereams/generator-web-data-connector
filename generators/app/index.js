@@ -49,7 +49,7 @@ module.exports = yeoman.generators.Base.extend({
         prompts = [{
           name: 'name',
           message: 'What would you like to call this connector?',
-          default: 'My Web Data Connector'
+          default: 'My Web Data'
         }, {
           name: 'authentication',
           type: 'list',
@@ -155,6 +155,7 @@ module.exports = yeoman.generators.Base.extend({
       this.template('_index.html', 'index.html');
       this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
+      this.template('_main.css', 'src/main.css');
     },
 
     gruntfile: function () {
