@@ -2,7 +2,7 @@
   "name": "<%= props.appname %>",
   "version": "0.0.0",
   "dependencies": {
-    "material-design-lite": "~1",
+    "bootstrap": "~4.0.0",
     "jquery": "~1.11"
   }
 }

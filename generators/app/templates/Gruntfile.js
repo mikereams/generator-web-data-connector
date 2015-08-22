@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         src: [
           'bower_components/jquery/dist/jquery.js',
           'bower_components/tableau/dist/*.js',
-          'bower_components/material-design-lite/material.js',
+          'bower_components/bootstrap/dist/js/bootstrap.js',
           'src/wrapper.js',
           'src/**/*.js'
         ],
