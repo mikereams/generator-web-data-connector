@@ -1,7 +1,7 @@
   // You can write private methods for use above like this:
 
   /**
-   * Helper function to build an API endpoint.
+   * Helper function to build an API endpoint<%= props.needsProxy ? ' that uses our proxy' : '' %>.
    *
    * @param {string} path
    *   API endpoint path from which to build a full URL.

@@ -21,7 +21,9 @@ app.get('/proxy', function (req, res) {
       options = {
         url: 'https://api.example.com/' + realPath,
         headers: {
-          Accept: 'application/json',
+          Accept: 'application/json',<% if (props.authentication !== 'none') { %>
+          // Client-side code sends us exactly what we need for authentication.
+          Authorization: req.header('authorization'),<% } %>
           'User-Agent': '<%= props.appname %>/0.0.0'
         }
       };
