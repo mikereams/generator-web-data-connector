@@ -90,6 +90,8 @@ var wdcw = window.wdcw || {};
    *   tableau.headersCallback method.
    */
   connector.getColumnHeaders = function callConnectorColumnHeaders() {
+    var thisConnector = this;
+
     wdcw.columnHeaders.call(this, function getColumnHeadersSuccess(headers) {
       var names = [],
           types = [];
@@ -102,9 +104,9 @@ var wdcw = window.wdcw || {};
 
         // If a column is marked as incremental refresh key, then set it.
         if (header.incrementalRefresh) {
-          this.setIncrementalExtractColumn(header.name);
+          thisConnector.setIncrementalExtractColumn(header.name);
         }
-      }, this);
+      });
 
       tableau.headersCallback(names, types);
     });
