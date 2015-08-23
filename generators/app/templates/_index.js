@@ -31,14 +31,25 @@ app.get('/proxy', function (req, res) {
   // Make an HTTP request using the above specified options.
   console.log('Attempting to proxy request to ' + options.url);
   request(options, function (error, response, body) {
+    var header;
+
     if (!error && response.statusCode == 200) {
+      // Proxy all response headers.
+      for (header in response.headers) {
+        if (response.headers.hasOwnProperty(header)) {
+          res.set(header, response.headers[header]);
+        }
+      }
+
+      // Send the response body.
       res.send(body);
     }
     else {
+      error = error || response.statusMessage || response.statusCode;
       console.log('Error fulfilling request: "' + error.toString() + '"');
-      res.sendStatus(403);
+      res.sendStatus(response.statusCode);
     }
-  })
+  });
 });
 
 var server = app.listen(9001, function () {
