@@ -32,4 +32,9 @@ app.get('/proxy', function (req, res) {
   })
 });
 
+var server = app.listen(9001, function () {
+  var port = server.address().port;
+  console.log('Express server listening on port ' + port);
+});
+
 module.exports = app;
