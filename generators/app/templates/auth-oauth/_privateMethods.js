@@ -22,10 +22,13 @@
    *   Options to inform query parameters and paging.
    */
   function buildApiFrom(path, opts) {
+    opts = opts || {};
+    path = '<%= props.needsProxy ? '/proxy?endpoint=' : 'https://api.example.com/' %>' + path;
+
     // If opts.last was passed, build the URL so the next page is returned.
     if (opts.last) {
-      path += '?page=' + opts.last + 1;
+      path += '<%= props.needsProxy ? '&' : '?' %>page=' + opts.last + 1;
     }
 
-    return 'https://api.example.com/' + path;
+    return path;
   }

@@ -1,6 +1,6 @@
     // Do the same to retrieve your actual data.
     $.ajax({
-      url: "https://api.example.com/path/to/your/metadata",
+      url: buildApiFrom('path/to/your/metadata'),
       // Add basic authentication headers to your request like this. Note that
       // the password is encrypted when stored by Tableau; the username is not.
       headers: {
