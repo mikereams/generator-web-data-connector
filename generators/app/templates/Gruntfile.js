@@ -40,7 +40,15 @@ module.exports = function(grunt) {
         src: 'build/all.js',
         dest: 'build/all.min.js'
       }
-    },
+    },<% if (props.needsProxy) { %>
+    express: {
+      server: {
+        options: {
+          script: 'index.js',
+            port: 9001
+        }
+      }
+    },<% } else { %>
     connect: {
       server: {
         options: {
@@ -48,21 +56,27 @@ module.exports = function(grunt) {
           port: 9001
         }
       }
-    },
+    },<% } %>
     watch: {
       scripts: {
         files: 'src/**/*.js',
         tasks: [
           'jshint',
           'concat',
-          'uglify'
-        ]
+          'uglify'<% if (props.needsProxy) { %>,
+          'express:server'
+        ],
+        options: {
+          spawn: false
+        }<% } else { %>
+        ]<% } %>
       }
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-concat');<% if (props.needsProxy) { %>
+  grunt.loadNpmTasks('grunt-express-server');<% } else { %>
+  grunt.loadNpmTasks('grunt-contrib-connect');<% } %>
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -70,13 +84,15 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
     'jshint',
     'concat',
-    'uglify',
-    'connect:server',
+    'uglify',<% if (props.needsProxy) { %>
+    'express:server',<% } else { %>
+    'connect:server',<% } %>
     'watch'
   ]);
 
-  grunt.registerTask('run', [
-    'connect:server',
+  grunt.registerTask('run', [<% if (props.needsProxy) { %>
+    'express:server',<% } else { %>
+    'connect:server',<% } %>
     'watch'
   ]);
 };

@@ -1,6 +1,6 @@
     // Make a request to the API using your API token like this:
     $.ajax({
-      url: "https://api.example.com/path/to/your/metadata",
+      url: buildApiFrom('path/to/your/metadata'),
       headers: {
         // Note that the token is available on the "password" property of the
         // global tableau object. The password is encrypted when stored.

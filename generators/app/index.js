@@ -69,6 +69,18 @@ module.exports = yeoman.generators.Base.extend({
           }],
           default: 'none'
         }, {
+          name: 'needsProxy',
+          message: 'Are you connecting to a service with CORS restrictions?',
+          type: 'list',
+          choices: [{
+            name: 'Nope, requests are not restricted / not applicable',
+            value: false
+          }, {
+            name: 'Yep, I need a server-side proxy to account for CORS',
+            value: true
+          }],
+          default: false
+        },{
           name: 'hasInput',
           message: 'Does your connector need a text field?',
           type: 'confirm',
@@ -120,6 +132,7 @@ module.exports = yeoman.generators.Base.extend({
       this.prompt(prompts, function (props) {
         props.name = props.name.replace(/\"/g, '\\"');
         props.appname = _.slugify(props.name);
+
         if (props.hasInput) {
           props.inputLabel = props.inputName;
           props.inputName = _.classify(props.inputLabel);
@@ -156,6 +169,10 @@ module.exports = yeoman.generators.Base.extend({
       this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
       this.template('_main.css', 'src/main.css');
+
+      if (this.props.needsProxy) {
+        this.template('_index.js', 'index.js');
+      }
     },
 
     gruntfile: function () {
