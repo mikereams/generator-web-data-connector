@@ -2,9 +2,9 @@
     $.ajax({
       url: buildApiFrom('path/to/your/metadata'),
       headers: {
-        // Note that the token is available on the "password" property of the
-        // global tableau object. The password is encrypted when stored.
-        Authorization: 'token ' + tableau.password
+        // Note that the token is available as the "password" associated with
+        // this connection. The password/token value is encrypted when stored.
+        Authorization: 'token ' + this.getPassword()
       },
       success: function columnHeadersRetrieved(response) {
         var processedColumns = [],

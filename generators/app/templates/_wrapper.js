@@ -171,6 +171,55 @@ var wdcw = window.wdcw || {};
   };
 
   /**
+   * Extension of the web data connector API that gets the connection username.
+   *
+   * @returns {string}
+   *   The username associated with this connection.
+   */
+  connector.getUsername = function getUsername() {
+    return tableau.username;
+  };
+
+  /**
+   * Extension of the web data connector API that sets the connection username.
+   *
+   * @param {string} username
+   *   The username to be associated with this connection.
+   *
+   * @returns {string}
+   *   The username now associated with this connection.
+   */
+  connector.setUsername = function setUsername(username) {
+    tableau.username = username;
+    return tableau.username;
+  };
+
+  /**
+   * Extension of the web data connector API that gets the connection password.
+   *
+   * @returns {string}
+   *   The password associated with this connection.
+   */
+  connector.getPassword = function getPassword() {
+    return tableau.password;
+  };
+
+  /**
+   * Extension of the web data connector API that sets the connection password.
+   *
+   * @param {string} password
+   *   The password or other sensitive connection information to be associated
+   *   with this connection. The value is encrypted and stored by tableau.
+   *
+   * @returns {string}
+   *   The password now associated with this connection.
+   */
+  connector.setPassword = function setPassword(password) {
+    tableau.password = password;
+    return tableau.password;
+  };
+
+  /**
    * Extension of the web data connector API that gets the incremental extract
    * column.
    */
@@ -233,12 +282,12 @@ var wdcw = window.wdcw || {};
 
       // If there was a password, set the password.
       if ($password.length) {
-        tableau.password = $password.val();
+        connector.setPassword($password.val());
       }
 
       // If there was a username, set the username.
       if ($username.length) {
-        tableau.username = $username.val();
+        connector.setUsername($username.val());
       }
 
       // Initiate the data retrieval process.
