@@ -28,6 +28,4 @@
       }
       data.push(rowData);
       registerData(data);
-    }).fail(function(jqxhr, textStatus) {
-      tableau.abortWithError("error connecting to Google Spreadsheets: " + textStatus);
-    });
+    }).fail(this.ajaxErrorHandler);

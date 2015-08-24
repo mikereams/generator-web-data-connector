@@ -241,6 +241,21 @@ var wdcw = window.wdcw || {};
     return column;
   };
 
+  /**
+   * A generic error handler that can be used by implementors for simplicity.
+   *
+   * @param {object} jqXHR
+   * @param {string} textStatus
+   * @param {string} errorThrown
+   */
+  connector.ajaxErrorHandler =  function ajaxErrorHandler(jqXHR, textStatus, errorThrown) {
+    var message = 'There was a problem retrieving data: "' +
+          textStatus + '" with error thrown: "' +
+          errorThrown + '"';
+
+    tableau.abortWithError(message);
+  };
+
   // Register our connector, which uses logic from the connector wrapper.
   tableau.registerConnector(connector);
 

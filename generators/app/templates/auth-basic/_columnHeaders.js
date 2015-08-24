@@ -26,5 +26,7 @@
 
         // Once data is retrieved and processed, call registerHeaders().
         registerHeaders(processedColumns);
-      }
+      },
+      // Use this.ajaxErrorHandler for basic error handling.
+      error: this.ajaxErrorHandler
     });

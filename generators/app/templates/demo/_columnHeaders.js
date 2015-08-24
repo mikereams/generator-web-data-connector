@@ -40,6 +40,4 @@
       // Register our headers.
       connector._numCols = fields.length;
       registerHeaders(fields);
-    }).fail(function(jqxhr, textStatus) {
-      tableau.abortWithError("error connecting to Google Spreadsheets: " + textStatus);
-    });
+    }).fail(this.ajaxErrorHandler);

@@ -44,5 +44,7 @@
         else {
           registerData(processedData);
         }
-      }
+      },
+      // Use this.ajaxErrorHandler for basic error handling.
+      error: this.ajaxErrorHandler
     });
