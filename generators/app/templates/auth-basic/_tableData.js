@@ -17,7 +17,7 @@
     $.ajax({
       url: buildApiFrom('path/to/your/data', {last: lastRecord}),
       headers: {
-        Authorization: 'Basic ' + btoa(tableau.username + ':' + tableau.password)
+        Authorization: 'Basic ' + btoa(this.getUsername() + ':' + this.getPassword())
       },
       success: function dataRetrieved(response) {
         var processedData = [],
@@ -44,5 +44,7 @@
         else {
           registerData(processedData);
         }
-      }
+      },
+      // Use this.ajaxErrorHandler for basic error handling.
+      error: this.ajaxErrorHandler
     });

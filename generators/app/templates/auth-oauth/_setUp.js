@@ -17,7 +17,7 @@
             headers: {
               Accept: 'application/json',
               // This may be one of several ways to attempt to validate a token.
-              Authorization: 'token ' + tableau.password
+              Authorization: 'token ' + this.getPassword()
             },
             success: function(response) {
               // For some authentication flows, the request may succeed, but you

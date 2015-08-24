@@ -4,7 +4,7 @@
       // Add basic authentication headers to your request like this. Note that
       // the password is encrypted when stored by Tableau; the username is not.
       headers: {
-        Authorization: 'Basic ' + btoa(tableau.username + ':' + tableau.password)
+        Authorization: 'Basic ' + btoa(this.getUsername() + ':' + this.getPassword())
       },
       success: function dataRetrieved(response) {
         var processedColumns = [],
@@ -26,5 +26,7 @@
 
         // Once data is retrieved and processed, call registerHeaders().
         registerHeaders(processedColumns);
-      }
+      },
+      // Use this.ajaxErrorHandler for basic error handling.
+      error: this.ajaxErrorHandler
     });

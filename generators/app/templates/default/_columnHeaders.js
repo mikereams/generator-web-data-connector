@@ -28,7 +28,8 @@
 
       // Once data is retrieved, call the registerHeaders() method.
       registerHeaders(processedColumns);
-    });
+    // Use this.ajaxErrorHandler for basic error handling.
+    }).fail(this.ajaxErrorHandler);
 
     // You may also have to retrieve some data and infer the columns and their
     // types from the first row of data. This exercise left to the reader.
