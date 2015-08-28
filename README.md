@@ -3,6 +3,7 @@
 A scaffolding tool for Tableau Web Data Connectors, built on [yeoman][].
 
 Jump to the information you need:
+
 __[Getting Started](#getting-started)__
 - [Installation](#installation)
 - [Usage](#usage)
@@ -40,6 +41,8 @@ Once all prerequisites are met, you can install the generator itself by running
 `npm install -g generator-web-data-connector`
 
 #### Usage
+
+![gwdc](https://cloud.githubusercontent.com/assets/3496491/9558059/195c3a9e-4d96-11e5-9ee4-cad64a97c99e.png)
 
 1. Create a new space to house your connector: `mkdir my-connector`
 1. Change directories into the directory you created: `cd my-connector`
