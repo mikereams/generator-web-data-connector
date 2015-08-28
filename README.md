@@ -3,17 +3,17 @@
 A scaffolding tool for Tableau Web Data Connectors, built on [yeoman][].
 
 Jump to the information you need:
-#### [Getting Started](#getting-started)
-- __[Installation](#installation)__
-- __[Usage](#usage)__
+__[Getting Started](#getting-started)__
+- [Installation](#installation)
+- [Usage](#usage)
 
-#### [Developing](#developing)
-- __[Explanation of files](#explanation-of-files)__
-- __[Workflow](#workflow)__
+__[Developing](#developing)__
+- [Explanation of files](#explanation-of-files)
+- [Workflow](#workflow)
 
-#### [WDC Wrapper](#wdc-wrapper)
-- __[WDC lifecycle phases](#wdc-lifecycle-phases)__
-- __[Wrapper helpers](#wrapper-helpers)__
+__[WDC Wrapper](#wdc-wrapper)__
+- [WDC lifecycle phases](#wdc-lifecycle-phases)
+- [Wrapper helpers](#wrapper-helpers)
 
 #### [Contributing](#contributing)
 
