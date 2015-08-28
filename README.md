@@ -16,7 +16,7 @@ __[WDC Wrapper](#wdc-wrapper)__
 - [WDC lifecycle phases](#wdc-lifecycle-phases)
 - [Wrapper helpers](#wrapper-helpers)
 
-#### [Contributing](#contributing)
+__[Contributing](#contributing)__
 
 
 ## Getting Started
@@ -195,7 +195,7 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 [yeoman]: http://yeoman.io
-[NodeJS]: http://nodejs.org/
+[NodeJS]: https://nodejs.org/
 [grunt-cli]: http://gruntjs.com/using-the-cli
 [bower]: http://bower.io/
 [cmder]: http://cmder.net/
