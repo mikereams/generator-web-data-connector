@@ -3,16 +3,19 @@
 A scaffolding tool for Tableau Web Data Connectors, built on [yeoman][].
 
 Jump to the information you need:
-- #### [Getting Started](#getting-started)
-  - __[Installation](#installation)__
-  - __[Usage](#usage)__
-- #### [Developing](#developing)
-  - __[Explanation of files](#explanation-of-files)__
-  - __[Workflow](#workflow)__
-- #### [WDC Wrapper](#wdc-wrapper)
-  - __[WDC lifecycle phases](#wdc-lifecycle-phases)__
-  - __[Wrapper helpers](#wrapper-helpers)__
-- #### [Contributing](#contributing)
+#### [Getting Started](#getting-started)
+- __[Installation](#installation)__
+- __[Usage](#usage)__
+
+#### [Developing](#developing)
+- __[Explanation of files](#explanation-of-files)__
+- __[Workflow](#workflow)__
+
+#### [WDC Wrapper](#wdc-wrapper)
+- __[WDC lifecycle phases](#wdc-lifecycle-phases)__
+- __[Wrapper helpers](#wrapper-helpers)__
+
+#### [Contributing](#contributing)
 
 
 ## Getting Started
@@ -84,13 +87,13 @@ is an overview of files and folders to help orient yourself.
   - A helper library used to abstract away and simplify the Tableau WDC API. You
     should not need to update this file, though you may wish to refer to it from
     time to time. For complete details, jump to [WDC Wrapper](#wdc-wrapper).
+- __`/Gruntfile.js`__
+  - File that declares grunt tasks and configurations. For more details, jump to
+    [workflow](#workflow).
 - __`/build/`__
   - Once you've run `grunt` at least once, this folder will appear. It contains
     files built by grunt that your connector relies on, such as the concatenated
     JS file `all.min.js`.
-- __`/Gruntfile.js`__
-  - File that declares grunt tasks and configurations. For more details, jump to
-    [workflow](#workflow).
 - __`/bower_components/`__
   - This folder contains libraries that your connector depends on. By default,
     you might see jQuery, Bootstrap, and the Tableau SDK, but you can add your
@@ -169,7 +172,8 @@ of a connection's lifecycle.
 #### Wrapper helpers
 
 The web data connector wrapper also provides some helper methods to simplify the
-way you interact with Tableau.
+way you interact with Tableau. All methods are available on `this` within the
+immediate scope of your `wdcw` methods.
 
 - __Retrieving connection details__
   - Retrieve connection details using `this.getConnectionData()`. This will
@@ -181,7 +185,7 @@ way you interact with Tableau.
     fail. This will inform Tableau of the error, and pop an error dialog.
 
 
-#### Contributing
+## Contributing
 
 This generator is a perpetual work-in-progress. Your contributions are welcome
 and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
