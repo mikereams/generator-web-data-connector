@@ -193,10 +193,10 @@ immediate scope of your `wdcw` methods.
 
 ## Deploying
 
-This generator offers several deployment strategies based on the type of
-connector you're making. Although it handles setup and boilerplate for these
-services, additional work is necessary to actually deploy the app. Documentation
-for each option is provided below:
+Great! You've built your web data connector, but how do you make it accessible
+to Tableau users? Although this generator does setup and some boilerplate for
+several deployment strategies, additional work is necessary to actually deploy
+the app. Documentation for each option is provided below:
 
 #### Heroku
 - Be sure you have [git][] and the [heroku toolbelt][] installed, then
