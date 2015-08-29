@@ -18,6 +18,7 @@ __[WDC Wrapper](#wdc-wrapper)__
 
 __[Deploying](#deploying)__
 - [To Heroku](#heroku)
+- [To GitHub Pages](#github-pages)
 
 __[Contributing](#contributing)__
 
@@ -199,6 +200,14 @@ several deployment strategies, additional work is necessary to actually deploy
 the app. Documentation for each option is provided below:
 
 #### Heroku
+
+[Heroku][] is a cloud platform for building, scaling, and delivering apps. You
+can spin up a sandbox application for free, though paid tiers are available. If
+you selected "Heroku" as your desired deployment strategy with this generator,
+everything required to successfully deploy your connector as a NodeJS app on
+Heroku is done for you. However, you'll need to perform some setup beforehand.
+Details on that below:
+
 - Be sure you have [git][] and the [heroku toolbelt][] installed, then
 - Once you have your app working, initialize a git repository with `git init`
 - Commit all of your changes: `git add . && git commit -m "Initial commit."`
@@ -207,6 +216,26 @@ the app. Documentation for each option is provided below:
 - Deploy your app via git: `git push heroku master`
 - Ensure at least one instance of the app is running: `heroku ps:scale web=1`
 - Visit your connector in a browser: `heroku open`
+
+#### GitHub Pages
+
+[GitHub Pages][] is a free static file hosting service provided by GitHub. It
+works by serving files from a special branch (`gh-pages`) on a repository hosted
+on the service. If you selected "GitHub Pages" as your desired deployment
+strategy with this generator, most everything is taken care of for you in a
+special `grunt deploy` task. See below for complete setup details.
+
+- Be sure you have a [GitHub account][] and [git][] installed, then
+- Create a [new GitHub repository][] for your connector
+- Note your repo's URL, something like `git@github.com:username/repo-name.git`
+- If you haven't, initialize a git repo at the root of your connector with the
+  following command: `git init`
+- Add GitHub as your repo's origin remote with: `git remote add origin [url]`
+  where `[url]` is the repo URL you noted above.
+- To deploy, run `grunt deploy`
+- Visit your connector in a browser at its GitHub pages URL. It will vary
+  depending on your GitHub account name and repository name, but look something
+  like this: `https://username.github.io/repo-name`
 
 
 ## Contributing
@@ -224,5 +253,9 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [Homebrew]: http://brew.sh/
 [ExpressJS]: http://expressjs.com/
 [JSHint]: http://jshint.com/about/
+[Heroku]: https://www.heroku.com
 [git]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 [heroku toolbelt]: https://toolbelt.heroku.com/
+[GitHub Pages]: https://pages.github.com/
+[GitHub account]: https://github.com/join
+[new GitHub repository]: https://github.com/new

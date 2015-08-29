@@ -128,7 +128,7 @@ module.exports = yeoman.generators.Base.extend({
           default: 'custom',
           choices: function (props) {
             var options = [{
-                  name: "Don't worry, I'll roll my own later",
+                  name: "I'll roll my own later",
                   value: 'custom'
                 }];
 
@@ -137,6 +137,12 @@ module.exports = yeoman.generators.Base.extend({
                 name: 'Heroku',
                 value: 'heroku'
               });
+            }
+            else {
+              options.push({
+                name: 'GitHub Pages',
+                value: 'gh-pages'
+              })
             }
 
             return options;
