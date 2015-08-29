@@ -71,7 +71,13 @@ module.exports = function(grunt) {
         }<% } else { %>
         ]<% } %>
       }
-    }
+    }<% if (props.deployTo === 'gh-pages') { %>,
+    'gh-pages': {
+      options: {
+        base: '.'
+      },
+      src: ['**']
+    }<% } %>
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');<% if (props.needsProxy) { %>
@@ -79,15 +85,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');<% } %>
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-watch');<% if (props.deployTo === 'gh-pages') { %>
+  grunt.loadNpmTasks('grunt-gh-pages');<% } %>
 
   grunt.registerTask('default', [
-    'jshint',
-    'concat',
-    'uglify',<% if (props.needsProxy) { %>
-    'express:server',<% } else { %>
-    'connect:server',<% } %>
-    'watch'
+    'build',
+    'run'
   ]);
 
   grunt.registerTask('run', [<% if (props.needsProxy) { %>
@@ -100,5 +103,10 @@ module.exports = function(grunt) {
     'jshint',
     'concat',
     'uglify'
-  ]);
+  ]);<% if (props.deployTo === 'gh-pages') { %>
+
+  grunt.registerTask('deploy', [
+    'build',
+    'gh-pages'
+  ]);<% } %>
 };
