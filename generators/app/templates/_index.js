@@ -2,7 +2,8 @@
 
 var express = require('express'),
     request = require('request'),
-    app = express();
+    app = express(),
+    port = process.env.PORT || 9001;
 
 // Serve files as if this were a static file server.
 app.use(express.static('./'));
@@ -52,7 +53,7 @@ app.get('/proxy', function (req, res) {
   });
 });
 
-var server = app.listen(9001, function () {
+var server = app.listen(port, function () {
   var port = server.address().port;
   console.log('Express server listening on port ' + port);
 });

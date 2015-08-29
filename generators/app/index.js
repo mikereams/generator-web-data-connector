@@ -21,7 +21,8 @@ module.exports = yeoman.generators.Base.extend({
       _tearDown: '',
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
-      _textareaField: this.templatePath('fields/_textareaField.html')
+      _textareaField: this.templatePath('fields/_textareaField.html'),
+      _packageJson: this.templatePath('default/_package.json')
     };
 
     // Add support for a `--demo` flag.
@@ -120,6 +121,26 @@ module.exports = yeoman.generators.Base.extend({
           message: "What's the text area for?",
           default: 'JSON String',
           when: userWantsTextarea
+        }, {
+          name: 'deployTo',
+          message: 'Where do you want to deploy this generator?',
+          type: 'list',
+          default: 'custom',
+          choices: function (props) {
+            var options = [{
+                  name: "Don't worry, I'll roll my own later",
+                  value: 'custom'
+                }];
+
+            if (props.needsProxy) {
+              options.push({
+                name: 'Heroku',
+                value: 'heroku'
+              });
+            }
+
+            return options;
+          }
         }];
 
     // Have Yeoman greet the user.
@@ -163,12 +184,13 @@ module.exports = yeoman.generators.Base.extend({
 
     app: function () {
       this._populateTemplateIncs();
-      this.template('_package.json', 'package.json');
+      this.template(this.templateIncs._packageJson, 'package.json');
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
       this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
       this.template('_main.css', 'src/main.css');
+      this.template('_gitignore', '.gitignore');
 
       if (this.props.needsProxy) {
         this.template('_index.js', 'index.js');
@@ -264,6 +286,15 @@ module.exports = yeoman.generators.Base.extend({
           templateFiles[index].folder = 'auth-oauth';
         }
       });
+    }
+
+    // Swap files according to deployment strategy.
+    if (this.props.deployTo !== 'custom') {
+      switch (this.props.deployTo) {
+        case 'heroku':
+          this.templateIncs._packageJson = this.templatePath('deploy-heroku/_package.json');
+          break;
+      }
     }
 
     return templateFiles;

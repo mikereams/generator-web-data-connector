@@ -16,6 +16,9 @@ __[WDC Wrapper](#wdc-wrapper)__
 - [WDC lifecycle phases](#wdc-lifecycle-phases)
 - [Wrapper helpers](#wrapper-helpers)
 
+__[Deploying](#deploying)__
+- [To Heroku](#heroku)
+
 __[Contributing](#contributing)__
 
 
@@ -188,6 +191,24 @@ immediate scope of your `wdcw` methods.
     fail. This will inform Tableau of the error, and pop an error dialog.
 
 
+## Deploying
+
+Great! You've built your web data connector, but how do you make it accessible
+to Tableau users? Although this generator does setup and some boilerplate for
+several deployment strategies, additional work is necessary to actually deploy
+the app. Documentation for each option is provided below:
+
+#### Heroku
+- Be sure you have [git][] and the [heroku toolbelt][] installed, then
+- Once you have your app working, initialize a git repository with `git init`
+- Commit all of your changes: `git add . && git commit -m "Initial commit."`
+- If you're not already logged in, do so: `heroku login`
+- Create a heroku app: `heroku apps:create name-of-your-app`
+- Deploy your app via git: `git push heroku master`
+- Ensure at least one instance of the app is running: `heroku ps:scale web=1`
+- Visit your connector in a browser: `heroku open`
+
+
 ## Contributing
 
 This generator is a perpetual work-in-progress. Your contributions are welcome
@@ -203,3 +224,5 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [Homebrew]: http://brew.sh/
 [ExpressJS]: http://expressjs.com/
 [JSHint]: http://jshint.com/about/
+[git]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+[heroku toolbelt]: https://toolbelt.heroku.com/

@@ -95,4 +95,10 @@ module.exports = function(grunt) {
     'connect:server',<% } %>
     'watch'
   ]);
+
+  grunt.registerTask('build', [
+    'jshint',
+    'concat',
+    'uglify'
+  ]);
 };
