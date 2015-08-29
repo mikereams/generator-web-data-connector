@@ -18,6 +18,7 @@ __[WDC Wrapper](#wdc-wrapper)__
 
 __[Deploying](#deploying)__
 - [To Heroku](#heroku)
+- [To GitHub Pages](#github-pages)
 
 __[Contributing](#contributing)__
 
