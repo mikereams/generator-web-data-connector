@@ -208,6 +208,19 @@ the app. Documentation for each option is provided below:
 - Ensure at least one instance of the app is running: `heroku ps:scale web=1`
 - Visit your connector in a browser: `heroku open`
 
+#### GitHub Pages
+- Be sure you have a [GitHub account][] and [git][] installed, then
+- Create a [new GitHub repository][] for your connector
+- Note your repo's URL, something like `git@github.com:username/repo-name.git`
+- If you haven't, initialize a git repo at the root of your connector with the
+  following command: `git init`
+- Add GitHub as your repo's origin remote with: `git remote add origin [url]`
+  where `[url]` is the repo URL you noted above.
+- To deploy, run `grunt deploy`
+- Visit your connector in a browser at its GitHub pages URL. It will be vary
+  depending on your GitHub account name and repository name, but look something
+  like this: `https://username.github.io/repo-name`
+
 
 ## Contributing
 
@@ -226,3 +239,5 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [JSHint]: http://jshint.com/about/
 [git]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 [heroku toolbelt]: https://toolbelt.heroku.com/
+[GitHub account]: https://github.com/join
+[new GitHub repository]: https://github.com/new
