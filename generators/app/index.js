@@ -179,8 +179,8 @@ module.exports = yeoman.generators.Base.extend({
     else {
       this.log('Generating demo connector for you...');
       this.props = {
-        name: 'Google Spreadsheets Connector Demo',
-        appname: 'google-spreadsheets-connector-demo'
+        name: 'Google Spreadsheets Demo',
+        appname: 'google-spreadsheets-demo'
       };
       done();
     }
@@ -196,7 +196,15 @@ module.exports = yeoman.generators.Base.extend({
       this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
       this.template('_main.css', 'src/main.css');
-      this.template('_gitignore', '.gitignore');
+      this.template('default/test/_test-wdcw.js', 'test/test-wdcw.js');
+      this.fs.copy(
+        this.templatePath('default/test/util/connector.js'),
+        this.destinationPath('test/util/connector.js')
+      );
+      this.fs.copy(
+        this.templatePath('default/test/util/tableau.js'),
+        this.destinationPath('test/util/tableau.js')
+      );
 
       if (this.props.needsProxy) {
         this.template('_index.js', 'index.js');
@@ -215,6 +223,10 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.copy(
         this.templatePath('jshintrc'),
         this.destinationPath('.jshintrc')
+      );
+      this.fs.copy(
+        this.templatePath('gitignore'),
+        this.destinationPath('.gitignore')
       );
     }
   },
@@ -279,6 +291,9 @@ module.exports = yeoman.generators.Base.extend({
     if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
       templateFiles.forEach(function (file, index) {
         if (['_columnHeaders.js', '_tableData.js'].indexOf(file.name) !== -1) {
+          templateFiles[index].folder = 'auth-' + that.props.authentication;
+        }
+        if (file.name === '_privateMethods.js' && that.props.authentication === 'basic') {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
         }
       });

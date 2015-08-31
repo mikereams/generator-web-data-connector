@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "test": "mocha",
     "postinstall": "grunt build"
   },
   "dependencies": {
@@ -20,6 +21,9 @@
   },
   "devDependencies": {
     "grunt-express-server": "~0.5",
-    "grunt-contrib-watch": "~0.6"
+    "grunt-contrib-watch": "~0.6",
+    "jsdom": "^3.1.2",
+    "mocha": "^2.2.5",
+    "sinon": "^1.16.1"
   }
 }
