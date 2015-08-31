@@ -163,17 +163,17 @@ The web data connector wrapper expects a global JS object called `wdcw`. Four
 methods can be attached to the `wdcw` object, corresponding to the four phases
 of a connection's lifecycle.
 
-- __Initialization__ `wdwc.setup = function(phase, setUpComplete)`
+- __Initialization__ `wdcw.setup = function(phase, setUpComplete)`
   - This method is optional, but can be provided if resources need to be
     initialized or connections need to be verified.
   - Like all methods, the provided callback (`setUpComplete` in this case) must
     be called once all tasks associated with the phase are complete.
-- __Retrieving columns__ - `wdwc.columnHeaders = function(registerHeaders)`
+- __Retrieving columns__ - `wdcw.columnHeaders = function(registerHeaders)`
   - This method is required and is called when Tableau wants to know the names
     and data types of columns provided by your connector.
   - The expected format is outlined in `main.js`, and must be provided as the
     sole argument to the provided callback (`registerHeaders` in this case).
-- __Retrieving data__ - `wdwc.tableData = function(registerData, lastRecord)`
+- __Retrieving data__ - `wdcw.tableData = function(registerData, lastRecord)`
   - This method is required and is called when Tableau is retrieving data from
     your connector.
   - The expected format is outlined in `main.js`, and must be provided as the
@@ -181,9 +181,9 @@ of a connection's lifecycle.
   - If the API you're connecting to supports paging, and you wish to support
     incremental extract refreshing, you can pass a second argument to the
     `registerData` callback representing the last record that was retrieved. If
-    provided, Tableau will call your `wdwc.tableData` method again, this time
+    provided, Tableau will call your `wdcw.tableData` method again, this time
     passing the token you provided for the `lastRecord` argument.
-- __Teardown__ - `wdwc.teardown = function(tearDownComplete)`
+- __Teardown__ - `wdcw.teardown = function(tearDownComplete)`
   - This method is optional, but can be provided if resources need to be spun
     down or other cleanup tasks need to occur.
   - Like all methods, the provided callback (`tearDownComplete` in this case)
