@@ -11,6 +11,7 @@ __[Getting Started](#getting-started)__
 __[Developing](#developing)__
 - [Explanation of files](#explanation-of-files)
 - [Workflow](#workflow)
+- [Testing](#testing)
 
 __[WDC Wrapper](#wdc-wrapper)__
 - [WDC lifecycle phases](#wdc-lifecycle-phases)
@@ -130,6 +131,18 @@ of for you:
 Of course, once initialized, you can make tweaks to your connector's workflow by
 adding or editing tasks and task configurations in the generated Gruntfile.js
 file at the root of your connector.
+
+#### Testing
+
+Recognizing that you're a responsible developer concerned with the long-term
+maintainability of your connector, this generator stubs out some simple unit
+tests to get you started.
+
+Unit tests can be executed by running `npm test` at the root directory of your
+connector.
+
+Tests are written using the [Mocha][] JavaScript test framework, as well as
+[Sinon][] for stubbing, and mocking.
 
 
 ## WDC Wrapper
@@ -253,6 +266,8 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [Homebrew]: http://brew.sh/
 [ExpressJS]: http://expressjs.com/
 [JSHint]: http://jshint.com/about/
+[Mocha]: https://mochajs.org/
+[Sinon]: http://sinonjs.org/
 [Heroku]: https://www.heroku.com
 [git]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 [heroku toolbelt]: https://toolbelt.heroku.com/
