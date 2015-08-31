@@ -23,7 +23,10 @@ describe('web-data-connector:app-noproxy', function () {
       'index.html',
       'src/main.js',
       'src/wrapper.js',
-      'src/main.css'
+      'src/main.css',
+      'test/test-wdcw.js',
+      'test/util/tableau.js',
+      'test/util/connector.js'
     ]);
   });
 });
@@ -47,7 +50,10 @@ describe('web-data-connector:app-proxy', function () {
       'src/main.js',
       'src/wrapper.js',
       'src/main.css',
-      'index.js'
+      'index.js',
+      'test/test-wdcw.js',
+      'test/util/tableau.js',
+      'test/util/connector.js'
     ]);
   });
 });

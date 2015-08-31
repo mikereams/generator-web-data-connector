@@ -42,6 +42,7 @@
         // If we don't yet have a token, direct the user to get a token.
         else {
           getNewAccessToken();
+          setUpComplete();
         }
         break;
 

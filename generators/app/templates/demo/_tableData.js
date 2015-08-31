@@ -1,5 +1,5 @@
     var connector = this,
-        docKey = connector.getConnectionData().docLink;
+        docKey = connector.getConnectionData().docLink || '';
 
     $.getJSON(buildConnectionUrl(docKey), function(responseData) {
       var data = [],

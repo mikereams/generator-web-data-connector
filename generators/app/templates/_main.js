@@ -1,6 +1,10 @@
-var wdcw = window.wdcw || {};
+var module = module || {},
+    window = window || {},
+    jQuery = jQuery || {},
+    tableau = tableau || {},
+    wdcw = window.wdcw || {};
 
-(function($, tableau, wdcw) {
+module.exports = function($, tableau, wdcw) {
 
   /**
    * Run during initialization of the web data connector.
@@ -109,4 +113,8 @@ var wdcw = window.wdcw || {};
 
   <%= templateIncs._privateMethods ? include(templateIncs._privateMethods).trim() : '' %>
 
-})(jQuery, tableau, wdcw);
+  return wdcw;
+};
+
+// Set the global wdcw variable as expected.
+wdcw = module.exports(jQuery, tableau, wdcw);
