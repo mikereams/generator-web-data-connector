@@ -32,7 +32,7 @@ var wdcw = window.wdcw || {};
         if (data.hasOwnProperty(key)) {
           $input = $('*[name="' + key + '"]');
           if ($input.length) {
-            $input.val(data[key]);
+            $input.val(data[key]).change();
           }
         }
       }
