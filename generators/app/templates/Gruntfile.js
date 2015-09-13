@@ -76,6 +76,17 @@ module.exports = function(grunt) {
       options: {
         base: '.'
       },
+      src: ['**'],
+      travisDeploy: {
+      options: {
+        user: {
+          name: 'Travis Deployment',
+            email: 'noreply@travis-ci.org'
+        },
+        repo: 'https://' + process.env.GH_TOKEN + '@github.com/repo-owner/<%= props.appname %>-connector.git',
+          message: 'Auto-deploy via Travis CI',
+          silent: true
+      },
       src: ['**']
     }<% } %>
   });
@@ -108,5 +119,10 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', [
     'build',
     'gh-pages'
+  ]);
+
+  grunt.registerTask('autoDeploy', [
+    'build',
+    'gh-pages:travisDeploy'
   ]);<% } %>
 };
