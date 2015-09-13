@@ -20,6 +20,7 @@ __[WDC Wrapper](#wdc-wrapper)__
 __[Deploying](#deploying)__
 - [To Heroku](#heroku)
 - [To GitHub Pages](#github-pages)
+- [Continuous Deployment](#continuous-deployment)
 
 __[Contributing](#contributing)__
 
@@ -250,6 +251,40 @@ special `grunt deploy` task. See below for complete setup details.
   depending on your GitHub account name and repository name, but look something
   like this: `https://username.github.io/repo-name`
 
+#### Continuous Deployment
+
+[Travis CI][] is a hosted continuous integration service that can be used to
+build, test, and deploy applications hosted on GitHub. It's free for open source
+projects, though a paid version is available for private projects.
+
+Travis hinges its builds off of a YAML file located at the root of projects
+named `.travis.yml` which describes how to build your app (things like the
+language and version your app is built in, installation steps, etc). This
+generator provides a sample `.travis.yml` file that--once you have an account
+and [enable Travis on your repo][]--should work right out of the box.
+
+If you'd like Travis to deploy your app for you, depending on your chosen
+deployment strategy, you'll need to make small modifications to the YAML file.
+In all cases, you'll need the [Travis commandline interface][] installed.
+
+__Heroku__
+- Make sure that the value of `deploy.app.master` is the real name of your web
+  data connector app on Heroku.
+- Run the following command: `travis encrypt $(heroku auth:token) --add deploy.api_key`
+  This will add an encrypted version of your Heroku authentication token to the
+  `.travis.yml` file, allowing deployments from Travis.
+
+__GitHub Pages__
+- Make sure that the GitHub repository owner and repository name point to your
+  connector's actual repository in gh-pages' `travisDeploy` configuration in the
+  Gruntfile.js file at the root of your connector.
+- Generate a [personal access token][] on your GitHub profile, enabling one or
+  both of the `repo` and `public_repo` scopes. Copy the generated token.
+- Run the following command: `travis encrypt GH_TOKEN=yourToken --add env.global`
+  Where you replace `yourToken` with the token value you copied above. This will
+  add an encrypted version of your GitHub personal access token to the
+  `.travis.yml` file, allowing deployments from Travis.
+
 
 ## Contributing
 
@@ -274,3 +309,7 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [GitHub Pages]: https://pages.github.com/
 [GitHub account]: https://github.com/join
 [new GitHub repository]: https://github.com/new
+[Travis CI]: https://travis-ci.org
+[enable Travis on your repo]: https://travis-ci.org/profile
+[Travis commandline interface]: https://github.com/travis-ci/travis.rb#installation
+[personal access token]: https://github.com/settings/tokens
