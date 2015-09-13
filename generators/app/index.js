@@ -22,11 +22,15 @@ module.exports = yeoman.generators.Base.extend({
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
       _textareaField: this.templatePath('fields/_textareaField.html'),
-      _packageJson: this.templatePath('default/_package.json')
+      _packageJson: this.templatePath('default/_package.json'),
+      _travisYml: this.templatePath('default/_travis.yml')
     };
 
     // Add support for a `--demo` flag.
     this.option('demo');
+
+    // Allow custom deployment via flags.
+    this.option('deployTo');
   },
 
   initializing: function() {
@@ -126,6 +130,7 @@ module.exports = yeoman.generators.Base.extend({
           message: 'Where do you want to deploy this generator?',
           type: 'list',
           default: 'custom',
+          when: !this.options.deployTo,
           choices: function (props) {
             var options = [{
                   name: "I'll roll my own later",
@@ -180,7 +185,8 @@ module.exports = yeoman.generators.Base.extend({
       this.log('Generating demo connector for you...');
       this.props = {
         name: 'Google Spreadsheets Demo',
-        appname: 'google-spreadsheets-demo'
+        appname: 'google-spreadsheets-demo',
+        deployTo: this.options.deployTo || 'custom'
       };
       done();
     }
@@ -228,6 +234,7 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('gitignore'),
         this.destinationPath('.gitignore')
       );
+      this.template(this.templateIncs._travisYml, '.travis.yml');
     }
   },
 
@@ -314,6 +321,11 @@ module.exports = yeoman.generators.Base.extend({
       switch (this.props.deployTo) {
         case 'heroku':
           this.templateIncs._packageJson = this.templatePath('deploy-heroku/_package.json');
+          this.templateIncs._travisYml = this.templatePath('deploy-heroku/_travis.yml');
+          break;
+
+        case 'gh-pages':
+          this.templateIncs._travisYml = this.templatePath('deploy-gh-pages/_travis.yml');
           break;
       }
     }
