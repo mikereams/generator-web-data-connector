@@ -73,10 +73,10 @@ describe('<%= props.appname %>-connector:columnHeaders', function describesConne
 });
 
 describe('<%= props.appname %>-connector:tableData', function describesConnectorTableData() {
-  var regsterData;
+  var registerData;
 
   beforeEach(function connectorTableDataBeforeEach() {
-    regsterData = sinon.spy();
+    registerData = sinon.spy();
     sinon.spy(jQuery, 'ajax');
     sinon.spy(jQuery, 'getJSON');
     wdcw = wdcwFactory(jQuery, {}, {});
@@ -90,11 +90,11 @@ describe('<%= props.appname %>-connector:tableData', function describesConnector
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
   it('should be tested here', function connectorTableDataTestHere() {
-    wdcw.tableData.call(connector, regsterData);
+    wdcw.tableData.call(connector, registerData);
 
-    assert(regsterData.called || jQuery.ajax.called || jQuery.getJSON.called);
-    if (regsterData.called) {
-      assert(Array.isArray(regsterData.getCall(0).args[0]));
+    assert(registerData.called || jQuery.ajax.called || jQuery.getJSON.called);
+    if (registerData.called) {
+      assert(Array.isArray(registerData.getCall(0).args[0]));
     }
   });
 
