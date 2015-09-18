@@ -287,7 +287,7 @@ var wdcw = window.wdcw || {};
 
       // If nothing was entered, there was a problem. Abort.
       // @todo Automatically add validation handling.
-      if (data === {}) {
+      if ($fields.length && data === {}) {
         return false;
       }
 
