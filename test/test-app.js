@@ -111,3 +111,30 @@ describe ('web-data-connector:app-demo', function () {
     wdcAssert.codeCopied('/deploy-gh-pages/_travis.yml', '.travis.yml');
   });
 });
+
+describe('web-data-connector:auth-basic', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ authentication: 'basic'})
+      .on('end', done);
+  });
+
+  it('places username and password fields in index.html', function () {
+    assert.fileContent('index.html', '<input class="form-control" type="text" name="username" id="username" placeholder="Username" />')
+    assert.fileContent('index.html', '<input class="form-control" type="password" name="password" id="password" placeholder="Password or token" />');
+  });
+
+  it('uses username and password getters in main.js', function () {
+    assert.fileContent('src/main.js', 'this.getUsername()');
+    assert.fileContent('src/main.js', 'this.getPassword()');
+  });
+
+  it('copied basic auth header code to main.js', function () {
+    wdcAssert.codeCopied('auth-basic/_columnHeaders.js', 'src/main.js');
+  });
+
+  it('copied basic auth private method code to main.js', function () {
+    assert.fileContent('src/main.js', 'function btoa(');
+  });
+});
