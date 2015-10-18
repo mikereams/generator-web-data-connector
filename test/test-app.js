@@ -138,3 +138,24 @@ describe('web-data-connector:auth-basic', function () {
     assert.fileContent('src/main.js', 'function btoa(');
   });
 });
+
+describe('web-data-connector:auth-token', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ authentication: 'token'})
+      .on('end', done);
+  });
+
+  it('places token field in index.html', function () {
+    assert.fileContent('index.html', '<input class="form-control" type="password" name="password" id="password" placeholder="Password or token" />');
+  });
+
+  it('uses username and password getters in main.js', function () {
+    assert.fileContent('src/main.js', 'this.getPassword()');
+  });
+
+  it('copied token auth header code to main.js', function () {
+    wdcAssert.codeCopied('auth-token/_columnHeaders.js', 'src/main.js');
+  });
+});
