@@ -195,3 +195,21 @@ describe('web-data-connector:deployment-gh-pages', function () {
     assert.fileContent('Gruntfile.js', "grunt.registerTask('autoDeploy'");
   });
 });
+
+describe('web-data-connector:deployment-heroku', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ deployTo: 'heroku'})
+      .on('end', done);
+  });
+
+  it('includes appropriate steps in .travis.yml', function () {
+    assert.fileContent('.travis.yml', 'npm install -g grunt-cli');
+    assert.fileContent('.travis.yml', "deploy:\n  provider: heroku");
+  });
+
+  it('includes appropriate package.json file', function () {
+    assert.fileContent('package.json', '"postinstall": "grunt build"');
+  });
+});
