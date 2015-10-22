@@ -112,6 +112,42 @@ describe ('web-data-connector:app-demo', function () {
   });
 });
 
+describe('web-data-connector:fields-input', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasInput: true, inputName: 'Generator Test Input'})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<input class="form-control" type="text" name="GeneratorTestInput" id="GeneratorTestInput" placeholder="Generator Test Input" />');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestInput">Generator Test Input</label>');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestInput']) {");
+  });
+});
+
+describe('web-data-connector:fields-textarea', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasTextarea: true, textareaName: 'Generator Test Area'})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<textarea class="form-control" type="text" rows="3" name="GeneratorTestArea" id="GeneratorTestArea" placeholder="Generator Test Area"></textarea>');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestArea">Generator Test Area</label>');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestArea']) {");
+  });
+});
+
 describe('web-data-connector:auth-basic', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
@@ -174,5 +210,66 @@ describe('web-data-connector:auth-oauth', function () {
 
   it('copies setup code to main.js', function () {
     wdcAssert.codeCopied('auth-oauth/_setUp.js', 'src/main.js');
+  });
+});
+
+describe('web-data-connector:deployment-gh-pages', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ deployTo: 'gh-pages'})
+      .on('end', done);
+  });
+
+  it('copies gh-pages .travis.yml to project root', function () {
+    wdcAssert.codeCopied('deploy-gh-pages/_travis.yml', '.travis.yml');
+  });
+
+  it('includes appropriate commands in gruntfile.js', function () {
+    assert.fileContent('Gruntfile.js', 'gh-pages:travisDeploy');
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('deploy'");
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('autoDeploy'");
+  });
+});
+
+describe('web-data-connector:deployment-heroku', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ deployTo: 'heroku'})
+      .on('end', done);
+  });
+
+  it('includes appropriate steps in .travis.yml', function () {
+    assert.fileContent('.travis.yml', 'npm install -g grunt-cli');
+    assert.fileContent('.travis.yml', "deploy:\n  provider: heroku");
+  });
+
+  it('includes appropriate package.json file', function () {
+    assert.fileContent('package.json', '"postinstall": "grunt build"');
+  });
+});
+
+describe('web-data-connector:needs-proxy', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ needsProxy: true})
+      .on('end', done);
+  });
+
+  it('sets up gruntfile.js as expected', function () {
+    assert.fileContent('Gruntfile.js', "express: {\n      server: {\n        options: {\n          script: 'index.js',\n            port: 9001");
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('run', [\n    'express:server'");
+  });
+
+  it('sets up package.json as expected', function () {
+    assert.fileContent('package.json', '"express": "^4.13.3"');
+    assert.fileContent('package.json', 'request": "^2.61.0"');
+    assert.fileContent('package.json', '"grunt-express-server": "~0.5"');
+  });
+
+  it('sets up index.js as expected', function () {
+    assert.fileContent('index.js', "app.get('/proxy', function (req, res) {");
   });
 });
