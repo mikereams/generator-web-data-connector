@@ -121,11 +121,30 @@ describe('web-data-connector:fields-input', function () {
   });
 
   it('adds expected markup to index.html', function () {
-    assert.fileContent('index.html', '<input class="form-control" type="text" name="GeneratorTestInput" id="GeneratorTestInput" placeholder="Generator Test Input" />')
+    assert.fileContent('index.html', '<input class="form-control" type="text" name="GeneratorTestInput" id="GeneratorTestInput" placeholder="Generator Test Input" />');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestInput">Generator Test Input</label>');
   });
 
   it('uses input within main.js', function () {
     assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestInput']) {");
+  });
+});
+
+describe('web-data-connector:fields-textarea', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasTextarea: true, textareaName: 'Generator Test Area'})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<textarea class="form-control" type="text" rows="3" name="GeneratorTestArea" id="GeneratorTestArea" placeholder="Generator Test Area"></textarea>');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestArea">Generator Test Area</label>');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestArea']) {");
   });
 });
 
