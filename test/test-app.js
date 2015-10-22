@@ -249,3 +249,27 @@ describe('web-data-connector:deployment-heroku', function () {
     assert.fileContent('package.json', '"postinstall": "grunt build"');
   });
 });
+
+describe('web-data-connector:needs-proxy', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ needsProxy: true})
+      .on('end', done);
+  });
+
+  it('sets up gruntfile.js as expected', function () {
+    assert.fileContent('Gruntfile.js', "express: {\n      server: {\n        options: {\n          script: 'index.js',\n            port: 9001");
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('run', [\n    'express:server'");
+  });
+
+  it('sets up package.json as expected', function () {
+    assert.fileContent('package.json', '"express": "^4.13.3"');
+    assert.fileContent('package.json', 'request": "^2.61.0"');
+    assert.fileContent('package.json', '"grunt-express-server": "~0.5"');
+  });
+
+  it('sets up index.js as expected', function () {
+    assert.fileContent('index.js', "app.get('/proxy', function (req, res) {");
+  });
+});
