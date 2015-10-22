@@ -159,3 +159,20 @@ describe('web-data-connector:auth-token', function () {
     wdcAssert.codeCopied('auth-token/_columnHeaders.js', 'src/main.js');
   });
 });
+
+describe('web-data-connector:auth-oauth', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ authentication: 'oauth'})
+      .on('end', done);
+  });
+
+  it('places oauth authorize link in index.html', function () {
+    assert.fileContent('index.html', '<a href="https://api.example.com/oauth/authorize');
+  });
+
+  it('copies setup code to main.js', function () {
+    wdcAssert.codeCopied('auth-oauth/_setUp.js', 'src/main.js');
+  });
+});
