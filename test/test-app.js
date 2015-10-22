@@ -176,3 +176,22 @@ describe('web-data-connector:auth-oauth', function () {
     wdcAssert.codeCopied('auth-oauth/_setUp.js', 'src/main.js');
   });
 });
+
+describe('web-data-connector:deployment-gh-pages', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ deployTo: 'gh-pages'})
+      .on('end', done);
+  });
+
+  it('copies gh-pages .travis.yml to project root', function () {
+    wdcAssert.codeCopied('deploy-gh-pages/_travis.yml', '.travis.yml');
+  });
+
+  it('includes appropriate commands in gruntfile.js', function () {
+    assert.fileContent('Gruntfile.js', 'gh-pages:travisDeploy');
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('deploy'");
+    assert.fileContent('Gruntfile.js', "grunt.registerTask('autoDeploy'");
+  });
+});
