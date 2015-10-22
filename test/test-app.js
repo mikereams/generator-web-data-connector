@@ -112,6 +112,23 @@ describe ('web-data-connector:app-demo', function () {
   });
 });
 
+describe('web-data-connector:fields-input', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasInput: true, inputName: 'Generator Test Input'})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<input class="form-control" type="text" name="GeneratorTestInput" id="GeneratorTestInput" placeholder="Generator Test Input" />')
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestInput']) {");
+  });
+});
+
 describe('web-data-connector:auth-basic', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
