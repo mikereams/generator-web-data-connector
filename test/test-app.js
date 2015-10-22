@@ -69,31 +69,31 @@ describe ('web-data-connector:app-demo', function () {
       .on('end', done);
   });
 
-  it('copied demo set up code to main.js', function () {
+  it('copies demo set up code to main.js', function () {
     wdcAssert.codeCopied('demo/_setUp.js', 'src/main.js');
   });
 
-  it('copied demo column header code to main.js', function () {
+  it('copies demo column header code to main.js', function () {
     wdcAssert.codeCopied('demo/_columnHeaders.js', 'src/main.js');
   });
 
-  it('copied demo table data code to main.js', function () {
+  it('copies demo table data code to main.js', function () {
     wdcAssert.codeCopied('demo/_tableData.js', 'src/main.js');
   });
 
-  it('copied demo tear down code to main.js', function () {
+  it('copies demo tear down code to main.js', function () {
     wdcAssert.codeCopied('demo/_tearDown.js', 'src/main.js');
   });
 
-  it('copied demo private methods to main.js', function () {
+  it('copies demo private methods to main.js', function () {
     wdcAssert.codeCopied('demo/_privateMethods.js', 'src/main.js');
   });
 
-  it('copied demo html form to index.html', function () {
+  it('copies demo html form to index.html', function () {
     wdcAssert.codeCopied('demo/_form.html', 'index.html');
   });
 
-  it('copied demo help text to index.html', function () {
+  it('copies demo help text to index.html', function () {
     wdcAssert.codeCopied('demo/_helpText.html', 'index.html');
   });
 
@@ -130,11 +130,11 @@ describe('web-data-connector:auth-basic', function () {
     assert.fileContent('src/main.js', 'this.getPassword()');
   });
 
-  it('copied basic auth header code to main.js', function () {
+  it('copies basic auth header code to main.js', function () {
     wdcAssert.codeCopied('auth-basic/_columnHeaders.js', 'src/main.js');
   });
 
-  it('copied basic auth private method code to main.js', function () {
+  it('copies basic auth private method code to main.js', function () {
     assert.fileContent('src/main.js', 'function btoa(');
   });
 });
@@ -155,7 +155,7 @@ describe('web-data-connector:auth-token', function () {
     assert.fileContent('src/main.js', 'this.getPassword()');
   });
 
-  it('copied token auth header code to main.js', function () {
+  it('copies token auth header code to main.js', function () {
     wdcAssert.codeCopied('auth-token/_columnHeaders.js', 'src/main.js');
   });
 });
