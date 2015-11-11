@@ -162,7 +162,7 @@ module.exports = yeoman.generators.Base.extend({
 
     if (!this.options.demo) {
       this.prompt(prompts, function (props) {
-        props.name = props.name.replace(/\"/g, '\\"');
+        props.name = props.name.replace(/\'/g, '&#39;');
         props.appname = _.slugify(props.name);
 
         if (props.hasInput) {
