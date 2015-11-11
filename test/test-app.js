@@ -134,6 +134,25 @@ describe('web-data-connector:fields-input', function () {
   });
 });
 
+describe('web-data-connector:fields-options', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasSelectOption: true, selectOptionName: 'Generator Test Options', selectOptionValues: ['generator', 'test', 'inputs']})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<select class="form-control" name="GeneratorTestOptions" id="GeneratorTestOptions');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestOptions">Generator Test Options</label>');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestOptions === 'generator') {");
+  });
+});
+
+
 describe('web-data-connector:fields-textarea', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
@@ -288,6 +307,7 @@ describe('web-data-connector:valid-javascript', function () {
         deployHeroku: {deployTo: 'heroku'},
         deployGithubPages: {deployTo: 'gh-pages'},
         includesInput: {hasInput: true, inputName: 'Input Name'},
+        includesOptions: {hasSelectOption: true, selectOptionName: 'Options Name', selectOptionValues: ['foo', 'bar', 'baz']},
         includesTextarea: {hasTextarea: true, textAreaName: 'Textarea Name'}
       };
 
