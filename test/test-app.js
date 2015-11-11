@@ -57,6 +57,7 @@ describe('web-data-connector:app-proxy', function () {
       'src/main.css',
       'index.js',
       'test/test-wdcw.js',
+      'test/.jshintrc',
       'test/util/tableau.js',
       'test/util/connector.js'
     ]);
