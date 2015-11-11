@@ -211,6 +211,10 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath('default/test/util/tableau.js'),
         this.destinationPath('test/util/tableau.js')
       );
+      this.fs.copy(
+        this.templatePath('default/test/jshintrc'),
+        this.destinationPath('test/.jshintrc')
+      );
 
       if (this.props.needsProxy) {
         this.template('_index.js', 'index.js');

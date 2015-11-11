@@ -3,6 +3,8 @@
 var path = require('path'),
     assert = require('yeoman-generator').assert,
     helpers = require('yeoman-generator').test,
+    given = require('mocha-testdata'),
+    jshint = require('jshint/src/cli'),
     wdcAssert = require('./assert.js');
 
 describe('web-data-connector:app-noproxy', function () {
@@ -26,6 +28,7 @@ describe('web-data-connector:app-noproxy', function () {
       'src/wrapper.js',
       'src/main.css',
       'test/test-wdcw.js',
+      'test/.jshintrc',
       'test/util/tableau.js',
       'test/util/connector.js'
     ]);
@@ -54,6 +57,7 @@ describe('web-data-connector:app-proxy', function () {
       'src/main.css',
       'index.js',
       'test/test-wdcw.js',
+      'test/.jshintrc',
       'test/util/tableau.js',
       'test/util/connector.js'
     ]);
@@ -126,7 +130,7 @@ describe('web-data-connector:fields-input', function () {
   });
 
   it('uses input within main.js', function () {
-    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestInput']) {");
+    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestInput) {");
   });
 });
 
@@ -144,7 +148,7 @@ describe('web-data-connector:fields-textarea', function () {
   });
 
   it('uses input within main.js', function () {
-    assert.fileContent('src/main.js', "if (this.getConnectionData()['GeneratorTestArea']) {");
+    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestArea) {");
   });
 });
 
@@ -271,5 +275,51 @@ describe('web-data-connector:needs-proxy', function () {
 
   it('sets up index.js as expected', function () {
     assert.fileContent('index.js', "app.get('/proxy', function (req, res) {");
+  });
+});
+
+describe('web-data-connector:valid-javascript', function () {
+  var combinations = {
+        default: {},
+        justNeedsProxy: {needsProxy: true},
+        tokenAuth: {authentication: 'token'},
+        basicAuth: {authentication: 'basic'},
+        oAuth: {authentication: 'oauth'},
+        deployHeroku: {deployTo: 'heroku'},
+        deployGithubPages: {deployTo: 'gh-pages'},
+        includesInput: {hasInput: true, inputName: 'Input Name'},
+        includesTextarea: {hasTextarea: true, textAreaName: 'Textarea Name'}
+      };
+
+  given.async(Object.keys(combinations)).it('produces valid javascript', function (done, prompt) {
+    var prompts = combinations[prompt],
+        files = [
+          'Gruntfile.js',
+          'src/wrapper.js',
+          'src/main.js',
+          'test/test-wdcw.js'
+        ];
+
+    // Only run jshint on index.js if a proxy is needed.
+    if (prompts.needsProxy || prompts.deployHeroku) {
+      files.push('index.js');
+    }
+
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts(prompts)
+      .on('end', function () {
+        var passed = jshint.run({
+          args: files,
+          reporter: function(results, data) {
+            if (results.length) {
+              console.error(results);
+            }
+          }
+        });
+
+        assert.strictEqual(passed, true);
+        done();
+      });
   });
 });

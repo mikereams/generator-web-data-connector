@@ -78,16 +78,17 @@ module.exports = function(grunt) {
       },
       src: ['**'],
       travisDeploy: {
-      options: {
-        user: {
-          name: 'Travis Deployment',
+        options: {
+          user: {
+            name: 'Travis Deployment',
             email: 'noreply@travis-ci.org'
-        },
-        repo: 'https://' + process.env.GH_TOKEN + '@github.com/repo-owner/<%= props.appname %>-connector.git',
+          },
+          repo: 'https://' + process.env.GH_TOKEN + '@github.com/repo-owner/<%= props.appname %>-connector.git',
           message: 'Auto-deploy via Travis CI',
           silent: true
-      },
-      src: ['**']
+        },
+        src: ['**']
+      }
     }<% } %>
   });
 

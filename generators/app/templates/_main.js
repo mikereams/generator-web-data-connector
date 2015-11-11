@@ -1,3 +1,5 @@
+/*jshint -W079 */
+/*jshint -W082 */
 var module = module || {},
     window = window || {},
     jQuery = jQuery || {},

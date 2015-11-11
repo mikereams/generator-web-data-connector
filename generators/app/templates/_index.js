@@ -34,7 +34,7 @@ app.get('/proxy', function (req, res) {
   request(options, function (error, response, body) {
     var header;
 
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
       // Proxy all response headers.
       for (header in response.headers) {
         if (response.headers.hasOwnProperty(header)) {
