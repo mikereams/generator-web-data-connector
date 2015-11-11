@@ -134,6 +134,25 @@ describe('web-data-connector:fields-input', function () {
   });
 });
 
+describe('web-data-connector:fields-options', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasSelectOption: true, selectOptionName: 'Generator Test Options', selectOptionValues: ['generator', 'test', 'inputs']})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<select class="form-control" name="GeneratorTestOptions" id="GeneratorTestOptions');
+    assert.fileContent('index.html', '<label class="sr-only" for="GeneratorTestOptions">Generator Test Options</label>');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestOptions === 'generator') {");
+  });
+});
+
+
 describe('web-data-connector:fields-textarea', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
@@ -288,17 +307,13 @@ describe('web-data-connector:valid-javascript', function () {
         deployHeroku: {deployTo: 'heroku'},
         deployGithubPages: {deployTo: 'gh-pages'},
         includesInput: {hasInput: true, inputName: 'Input Name'},
+        includesOptions: {hasSelectOption: true, selectOptionName: 'Options Name', selectOptionValues: ['foo', 'bar', 'baz']},
         includesTextarea: {hasTextarea: true, textAreaName: 'Textarea Name'}
       };
 
   given.async(Object.keys(combinations)).it('produces valid javascript', function (done, prompt) {
     var prompts = combinations[prompt],
-        files = [
-          'Gruntfile.js',
-          'src/wrapper.js',
-          'src/main.js',
-          'test/test-wdcw.js'
-        ];
+        files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
 
     // Only run jshint on index.js if a proxy is needed.
     if (prompts.needsProxy || prompts.deployHeroku) {
@@ -308,6 +323,27 @@ describe('web-data-connector:valid-javascript', function () {
     helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true })
       .withPrompts(prompts)
+      .on('end', function () {
+        var passed = jshint.run({
+          args: files,
+          reporter: function(results, data) {
+            if (results.length) {
+              console.error(results);
+            }
+          }
+        });
+
+        assert.strictEqual(passed, true);
+        done();
+      });
+  });
+
+
+  it('produces valid javascript <demo>', function (done) {
+    var files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
+
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true, demo: true })
       .on('end', function () {
         var passed = jshint.run({
           args: files,
