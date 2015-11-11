@@ -27,6 +27,8 @@
     "underscore.string": "^3.0.3"
   },
   "devDependencies": {
-    "mocha": "*"
+    "jshint": "^2.8.0",
+    "mocha": "*",
+    "mocha-testdata": "^1.1.0"
   }
 }

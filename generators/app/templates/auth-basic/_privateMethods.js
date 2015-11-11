@@ -23,6 +23,7 @@
 
   // Polyfill for btoa() in older browsers.
   // @see https://raw.githubusercontent.com/davidchambers/Base64.js/master/base64.js
+  /* jshint ignore:start */
   if (typeof btoa === 'undefined') {
     function btoa(input) {
       var object = typeof exports != 'undefined' ? exports : this, // #8: web workers
@@ -54,3 +55,4 @@
       return output;
     }
   }
+  /* jshint ignore:end */
