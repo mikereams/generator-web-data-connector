@@ -300,6 +300,7 @@ describe('web-data-connector:needs-proxy', function () {
 describe('web-data-connector:valid-javascript', function () {
   var combinations = {
         default: {},
+        containsBadChars: {name: 'company\'s data'},
         justNeedsProxy: {needsProxy: true},
         tokenAuth: {authentication: 'token'},
         basicAuth: {authentication: 'basic'},
