@@ -313,12 +313,7 @@ describe('web-data-connector:valid-javascript', function () {
 
   given.async(Object.keys(combinations)).it('produces valid javascript', function (done, prompt) {
     var prompts = combinations[prompt],
-        files = [
-          'Gruntfile.js',
-          'src/wrapper.js',
-          'src/main.js',
-          'test/test-wdcw.js'
-        ];
+        files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
 
     // Only run jshint on index.js if a proxy is needed.
     if (prompts.needsProxy || prompts.deployHeroku) {
@@ -328,6 +323,27 @@ describe('web-data-connector:valid-javascript', function () {
     helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true })
       .withPrompts(prompts)
+      .on('end', function () {
+        var passed = jshint.run({
+          args: files,
+          reporter: function(results, data) {
+            if (results.length) {
+              console.error(results);
+            }
+          }
+        });
+
+        assert.strictEqual(passed, true);
+        done();
+      });
+  });
+
+
+  it('produces valid javascript <demo>', function (done) {
+    var files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
+
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true, demo: true })
       .on('end', function () {
         var passed = jshint.run({
           args: files,
