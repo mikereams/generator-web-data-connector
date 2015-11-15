@@ -116,6 +116,23 @@ describe ('web-data-connector:app-demo', function () {
   });
 });
 
+describe('web-data-connector:fields-checkbox', function () {
+  before(function (done) {
+    helpers.run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true })
+      .withPrompts({ hasCheckbox: true, checkboxName: 'Needs Generator Test Checkbox'})
+      .on('end', done);
+  });
+
+  it('adds expected markup to index.html', function () {
+    assert.fileContent('index.html', '<input type="checkbox" name="NeedsGeneratorTestCheckbox" id="NeedsGeneratorTestCheckbox" /> Needs Generator Test Checkbox');
+  });
+
+  it('uses input within main.js', function () {
+    assert.fileContent('src/main.js', "if (this.getConnectionData().NeedsGeneratorTestCheckbox) {");
+  });
+});
+
 describe('web-data-connector:fields-input', function () {
   before(function (done) {
     helpers.run(path.join(__dirname, '../generators/app'))
@@ -307,6 +324,7 @@ describe('web-data-connector:valid-javascript', function () {
         oAuth: {authentication: 'oauth'},
         deployHeroku: {deployTo: 'heroku'},
         deployGithubPages: {deployTo: 'gh-pages'},
+        includesCheckbox: {hasCheckbox: true, checkboxName: 'Needs Something'},
         includesInput: {hasInput: true, inputName: 'Input Name'},
         includesOptions: {hasSelectOption: true, selectOptionName: 'Options Name', selectOptionValues: ['foo', 'bar', 'baz']},
         includesTextarea: {hasTextarea: true, textAreaName: 'Textarea Name'}
