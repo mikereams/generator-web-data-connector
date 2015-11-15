@@ -1,3 +1,8 @@
+    <% if (props.hasCheckbox) { %>// Access your checkbox option like this to tweak data gathering logic.
+    if (this.getConnectionData().<%= props.checkboxName %>) {
+
+    }
+    <% } %>
     <% if (props.hasInput) { %>// Access your input option like this to tweak data gathering logic.
     if (this.getConnectionData().<%= props.inputName %>) {
 

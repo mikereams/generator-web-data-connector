@@ -1,4 +1,7 @@
         <form>
+            <% if (props.hasCheckbox) { %>
+                <%= include(templateIncs._checkboxField).trim() %>
+            <% } %>
             <% if (props.hasInput) { %>
                 <%= include(templateIncs._inputField).trim() %>
             <% } %>
