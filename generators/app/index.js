@@ -19,6 +19,7 @@ module.exports = yeoman.generators.Base.extend({
       _tableData: '',
       _privateMethods: '',
       _tearDown: '',
+      _checkboxField: this.templatePath('fields/_checkboxField.html'),
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
       _textareaField: this.templatePath('fields/_textareaField.html'),
@@ -51,6 +52,7 @@ module.exports = yeoman.generators.Base.extend({
         userWantsSelectList = function (props) {return props.hasSelectOption;},
         userWantsTextarea = function (props) {return props.hasTextarea;},
         userWantsInput = function (props) {return props.hasInput;},
+        userWantsCheckbox = function (props) {return props.hasCheckbox;},
         prompts = [{
           name: 'name',
           message: 'What would you like to call this connector?',
@@ -85,7 +87,17 @@ module.exports = yeoman.generators.Base.extend({
             value: true
           }],
           default: false
-        },{
+        }, {
+          name: 'hasCheckbox',
+          message: 'Does your connector need a boolean / checkbox field?',
+          type: 'confirm',
+          default: false
+        }, {
+          name: 'checkboxName',
+          message: "What does the checkbox indicate?",
+          default: 'Needs special handling',
+          when: userWantsCheckbox
+        }, {
           name: 'hasInput',
           message: 'Does your connector need a text field?',
           type: 'confirm',
@@ -165,6 +177,10 @@ module.exports = yeoman.generators.Base.extend({
         props.name = props.name.replace(/\'/g, '&#39;');
         props.appname = _.slugify(props.name);
 
+        if (props.hasCheckbox) {
+          props.checkboxLabel = props.checkboxName;
+          props.checkboxName = _.classify(props.checkboxName);
+        }
         if (props.hasInput) {
           props.inputLabel = props.inputName;
           props.inputName = _.classify(props.inputLabel);
