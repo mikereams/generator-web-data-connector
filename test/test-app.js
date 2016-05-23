@@ -103,7 +103,7 @@ describe ('web-data-connector:app-demo', function () {
 
   it('uses the demo app name', function () {
     var name = 'Google Spreadsheets Demo',
-        appName = 'google-spreadsheets-demo';
+        appName = 'google-spreadsheets-demo-wdc';
 
     assert.fileContent('index.html', '<title>' + name + '</title>');
     assert.fileContent('src/wrapper.js', "tableau.connectionName = '" + name + "';");

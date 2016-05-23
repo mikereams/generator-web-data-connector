@@ -1,9 +1,14 @@
 {
-  "name": "<%= props.appname %>",
+  "name": "<%= props.appname %>-wdc",
+  "description": "A Tableau Web Data Connector for <%= props.name %>.",
   "version": "0.0.0",
   "scripts": {
     "test": "mocha"
   },
+  "keywords": [
+    "tableau-wdc",
+    "<%= props.appname %>"
+  ],
   "dependencies": {<% if (props.needsProxy) { %>
     "express": "^4.13.3",
     "request": "^2.61.0"<% } %>

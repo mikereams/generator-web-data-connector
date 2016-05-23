@@ -1,6 +1,6 @@
 {
-  "name": "<%= props.appname %>",
-  "description": "Tableau web data connector for <%= props.name %>",
+  "name": "<%= props.appname %>-wdc",
+  "description": "Tableau web data connector for <%= props.name %>.",
   "version": "0.0.0",
   "engines": {
     "node": "0.12.x"
@@ -10,6 +10,10 @@
     "test": "mocha",
     "postinstall": "grunt build"
   },
+  "keywords": [
+    "tableau-wdc",
+    "<%= props.appname %>"
+  ],
   "dependencies": {
     "express": "^4.13.3",
     "request": "^2.61.0",
