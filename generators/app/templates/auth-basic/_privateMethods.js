@@ -9,7 +9,7 @@
    * @param {object} opts
    *   Options to inform query parameters and paging.
    */
-  function buildApiFrom(path, opts) {
+  buildApiFrom = function buildApiFrom(path, opts) {
     opts = opts || {};
     path = '<%= props.needsProxy ? '/proxy?endpoint=' : 'https://api.example.com/' %>' + path;
 
@@ -19,13 +19,13 @@
     }
 
     return path;
-  }
+  };
 
   // Polyfill for btoa() in older browsers.
   // @see https://raw.githubusercontent.com/davidchambers/Base64.js/master/base64.js
   /* jshint ignore:start */
   if (typeof btoa === 'undefined') {
-    function btoa(input) {
+    btoa = function btoa(input) {
       var object = typeof exports != 'undefined' ? exports : this, // #8: web workers
           chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
           str = String(input);
@@ -53,6 +53,6 @@
         block = block << 8 | charCode;
       }
       return output;
-    }
+    };
   }
   /* jshint ignore:end */

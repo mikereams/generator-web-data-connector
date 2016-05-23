@@ -8,7 +8,7 @@
    * @returns {string}
    *   The URL to be accessed to retrieve JSON.
    */
-  function buildConnectionUrl(docLink) {
+  buildConnectionUrl = function buildConnectionUrl(docLink) {
     var regex = new RegExp('[\\?&]key=([^&#]*)'),
         results = regex.exec(docLink),
         docKey = results === null ? docLink : decodeURIComponent(results[1].replace(/\+/g, ' ')),
@@ -20,4 +20,4 @@
       docKey = urlParts[5];
     }
     return 'http://spreadsheets.google.com/feeds/cells/' + docKey + '/default/public/values?alt=json';
-  }
+  };

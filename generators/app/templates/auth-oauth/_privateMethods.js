@@ -3,14 +3,14 @@
   /**
    * Helper function that encapsulates OAuth API access token retrieval.
    */
-  function getNewAccessToken() {
+  getNewAccessToken = function getNewAccessToken() {
     // The exact flow for token retrieval may differ from API to API. Here, you
     // might perform a redirect, check for a temporary code and swap it for the
     // access token, etc. Consult your API's documentation for detailed flow.
 
     // Once you get a valid OAuth token, store it on tableau.password.
     tableau.password = 'The OAuth access token, once retrieved';
-  }
+  };
 
   /**
    * Helper function to build an API endpoint<%= props.needsProxy ? ' that uses our proxy' : '' %>.
@@ -21,7 +21,7 @@
    * @param {object} opts
    *   Options to inform query parameters and paging.
    */
-  function buildApiFrom(path, opts) {
+  buildApiFrom = function buildApiFrom(path, opts) {
     opts = opts || {};
     path = '<%= props.needsProxy ? '/proxy?endpoint=' : 'https://api.example.com/' %>' + path;
 
@@ -31,4 +31,4 @@
     }
 
     return path;
-  }
+  };
