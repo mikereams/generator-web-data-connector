@@ -1,5 +1,5 @@
 {
-  "name": "<%= props.appname %>",
+  "name": "<%= props.appname %>-wdc",
   "version": "0.0.0",
   "dependencies": {
     "bootstrap": "~4.0.0",
