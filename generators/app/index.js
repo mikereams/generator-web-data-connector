@@ -18,6 +18,7 @@ module.exports = yeoman.generators.Base.extend({
       _columnHeaders: '',
       _tableData: '',
       _privateMethods: '',
+      _privateMethodVars: '',
       _tearDown: '',
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
@@ -287,6 +288,9 @@ module.exports = yeoman.generators.Base.extend({
           name: '_privateMethods.js',
           folder: 'default'
         }, {
+          name: '_privateMethodVars.js',
+          folder: 'default'
+        }, {
           name: '_tearDown.js',
           folder: 'default'
         }];
@@ -307,6 +311,9 @@ module.exports = yeoman.generators.Base.extend({
         if (file.name === '_privateMethods.js' && that.props.authentication === 'basic') {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
         }
+        if (file.name === '_privateMethodVars.js' && that.props.authentication === 'basic') {
+          templateFiles[index].folder = 'auth-' + that.props.authentication;
+        }
       });
     }
 
@@ -314,7 +321,7 @@ module.exports = yeoman.generators.Base.extend({
     // set of files.
     if (this.props.authentication === 'oauth') {
       templateFiles.forEach(function (file, index) {
-        if (['_form.html', '_privateMethods.js', '_setUp.js'].indexOf(file.name) !== -1) {
+        if (['_form.html', '_privateMethods.js', '_privateMethodVars.js', '_setUp.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-oauth';
         }
       });

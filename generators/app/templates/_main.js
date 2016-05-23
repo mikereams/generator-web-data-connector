@@ -8,6 +8,8 @@ var module = module || {},
 
 module.exports = function($, tableau, wdcw) {
 
+  <%= templateIncs._privateMethodVars ? include(templateIncs._privateMethodVars).trim() : '' %>
+
   /**
    * Run during initialization of the web data connector.
    *

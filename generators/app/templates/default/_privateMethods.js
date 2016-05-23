@@ -9,7 +9,7 @@
    * @param {object} opts
    *   Options to inform query parameters and paging.
    */
-  function buildApiFrom(path, opts) {
+  buildApiFrom = function buildApiFrom(path, opts) {
     opts = opts || {};
     path = '<%= props.needsProxy ? '/proxy?endpoint=' : 'https://api.example.com/' %>' + path;
 
@@ -19,4 +19,4 @@
     }
 
     return path;
-  }
+  };
