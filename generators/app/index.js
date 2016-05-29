@@ -248,8 +248,8 @@ module.exports = yeoman.generators.Base.extend({
 
     // WDC SDK isn't distributed via bower, so copy in our local copy.
     this.fs.copy(
-      this.templatePath('tableauwdc-1.1.0.js'),
-      this.destinationPath('/bower_components/tableau/dist/tableauwdc-1.1.0.js')
+      this.templatePath('tableauwdc-1.1.1.js'),
+      this.destinationPath('/bower_components/tableau/dist/tableauwdc-1.1.1.js')
     );
   },
 
