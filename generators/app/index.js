@@ -200,7 +200,6 @@ module.exports = yeoman.generators.Base.extend({
       this.template(this.templateIncs._packageJson, 'package.json');
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
-      this.template('_wrapper.js', 'src/wrapper.js');
       this.template('_main.js', 'src/main.js');
       this.template('_main.css', 'src/main.css');
       this.template('default/test/_test-wdcw.js', 'test/test-wdcw.js');
@@ -248,8 +247,8 @@ module.exports = yeoman.generators.Base.extend({
 
     // WDC SDK isn't distributed via bower, so copy in our local copy.
     this.fs.copy(
-      this.templatePath('tableauwdc-1.1.1.js'),
-      this.destinationPath('/bower_components/tableau/dist/tableauwdc-1.1.1.js')
+      this.templatePath('tableauwdc-2.0.0-beta.js'),
+      this.destinationPath('/bower_components/tableau/dist/tableauwdc-2.0.0-beta.js')
     );
   },
 

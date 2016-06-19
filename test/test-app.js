@@ -25,7 +25,6 @@ describe('web-data-connector:app-noproxy', function () {
       '.travis.yml',
       'index.html',
       'src/main.js',
-      'src/wrapper.js',
       'src/main.css',
       'test/test-wdcw.js',
       'test/.jshintrc',
@@ -53,7 +52,6 @@ describe('web-data-connector:app-proxy', function () {
       '.travis.yml',
       'index.html',
       'src/main.js',
-      'src/wrapper.js',
       'src/main.css',
       'index.js',
       'test/test-wdcw.js',
@@ -106,7 +104,6 @@ describe ('web-data-connector:app-demo', function () {
         appName = 'google-spreadsheets-demo-wdc';
 
     assert.fileContent('index.html', '<title>' + name + '</title>');
-    assert.fileContent('src/wrapper.js', "tableau.connectionName = '" + name + "';");
     assert.fileContent('bower.json', '"name": "' + appName + '",');
     assert.fileContent('package.json', '"name": "' + appName + '",');
   });
@@ -130,7 +127,7 @@ describe('web-data-connector:fields-input', function () {
   });
 
   it('uses input within main.js', function () {
-    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestInput) {");
+    assert.fileContent('src/main.js', "if (this.getConnectionData('GeneratorTestInput')) {");
   });
 });
 
@@ -148,7 +145,7 @@ describe('web-data-connector:fields-options', function () {
   });
 
   it('uses input within main.js', function () {
-    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestOptions === 'generator') {");
+    assert.fileContent('src/main.js', "if (this.getConnectionData('GeneratorTestOptions') === 'generator') {");
   });
 });
 
@@ -167,7 +164,7 @@ describe('web-data-connector:fields-textarea', function () {
   });
 
   it('uses input within main.js', function () {
-    assert.fileContent('src/main.js', "if (this.getConnectionData().GeneratorTestArea) {");
+    assert.fileContent('src/main.js', "if (this.getConnectionData('GeneratorTestArea')) {");
   });
 });
 
@@ -314,7 +311,7 @@ describe('web-data-connector:valid-javascript', function () {
 
   given.async(Object.keys(combinations)).it('produces valid javascript', function (done, prompt) {
     var prompts = combinations[prompt],
-        files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
+        files = ['Gruntfile.js', 'src/main.js', 'test/test-wdcw.js'];
 
     // Only run jshint on index.js if a proxy is needed.
     if (prompts.needsProxy || prompts.deployHeroku) {
@@ -341,7 +338,7 @@ describe('web-data-connector:valid-javascript', function () {
 
 
   it('produces valid javascript <demo>', function (done) {
-    var files = ['Gruntfile.js', 'src/wrapper.js', 'src/main.js', 'test/test-wdcw.js'];
+    var files = ['Gruntfile.js', 'src/main.js', 'test/test-wdcw.js'];
 
     helpers.run(path.join(__dirname, '../generators/app'))
       .withOptions({ skipInstall: true, demo: true })

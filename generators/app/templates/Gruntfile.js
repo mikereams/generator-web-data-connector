@@ -21,11 +21,12 @@ module.exports = function(grunt) {
           separator: ';'
         },
         src: [
+          'bower_components/es6-promise/es6-promise.js',
           'bower_components/jquery/dist/jquery.js',
           'bower_components/tableau/dist/*.js',
           'bower_components/tether/dist/js/tether.js',
           'bower_components/bootstrap/dist/js/bootstrap.js',
-          'src/wrapper.js',
+          'bower_components/wdcw/dist/wdcw.js',
           'src/**/*.js'
         ],
         dest: 'build/all.js'

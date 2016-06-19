@@ -1,73 +1,101 @@
 'use strict';
 
-var assert = require('assert'),
+var mockery = require('mockery'),
+    assert = require('assert'),
     sinon = require('sinon'),
     jQuery = require('../bower_components/jquery/dist/jquery.js')(require('jsdom').jsdom().parentWindow),
     wdcwFactory = require('../src/main.js'),
     tableau = require('./util/tableau.js'),
     connector = require('./util/connector.js'),
-    wdcw;
+    wdcwConfig;
 
 describe('<%= props.appname %>-connector:setup', function describesConnectorSetup() {
-  var setUpComplete;
 
   beforeEach(function connectorSetupBeforeEach() {
-    setUpComplete = sinon.spy();
-    wdcw = wdcwFactory(jQuery, tableau, {});
+    wdcwConfig = require('../src/main.js');
   });
 
-  it('calls completion callback during interactive phase', function connectorSetupInteractive() {
-    // If available, ensure the callback is called during interaction.
-    if (wdcw.hasOwnProperty('setup')) {
-      wdcw.setup.call(connector, tableau.phaseEnum.interactivePhase, setUpComplete);
-      assert(setUpComplete.called);
+  it('resolves during interactive phase', function connectorSetupInteractive(done) {
+    // If available, ensure the setup phase resolves during interaction.
+    if (wdcwConfig.hasOwnProperty('setup')) {
+      wdcwConfig.setup.call(connector, tableau.phaseEnum.interactivePhase)
+        .then(function () {
+          done();
+        });
+    }
+    else {
+      done();
     }
   });
 
-  it('calls completion callback during auth phase', function connectorSetupAuth() {
-    // If available, ensure the callback is called during authentication.
-    if (wdcw.hasOwnProperty('setup')) {
-      wdcw.setup.call(connector, tableau.phaseEnum.authPhase, setUpComplete);
-      assert(setUpComplete.called);
+  it('resolves during auth phase', function connectorSetupAuth(done) {
+    // If available, ensure setup phase resolves during authentication
+    if (wdcwConfig.hasOwnProperty('setup')) {
+      wdcwConfig.setup.call(connector, tableau.phaseEnum.authPhase)
+        .then(function (){
+          done();
+        });
+    }
+    else {
+      done();
     }
   });
 
-  it('calls completion callback during data gathering phase', function connectorSetupData() {
-    // If available, ensure the callback is called during data gathering.
-    if (wdcw.hasOwnProperty('setup')) {
-      wdcw.setup.call(connector, tableau.phaseEnum.gatherDataPhase, setUpComplete);
-      assert(setUpComplete.called);
+  it('resolves during data gathering phase', function connectorSetupData(done) {
+    // If available, ensure the setup phase resolves during data gathering.
+    if (wdcwConfig.hasOwnProperty('setup')) {
+      wdcwConfig.setup.call(connector, tableau.phaseEnum.gatherDataPhase)
+        .then(function () {
+          done();
+        });
+    }
+    else {
+      done();
     }
   });
 
 });
 
-describe('<%= props.appname %>-connector:columnHeaders', function describesConnectorColumnHeaders() {
-  var registerHeaders;
-
+describe('<%= props.appname %>-connector:schema', function describesConnectorColumnHeaders() {
   beforeEach(function connectorColumnHeadersBeforeEach() {
-    registerHeaders = sinon.spy();
     // Here's how you might stub or mock various jQuery methods.
-    sinon.spy(jQuery, 'ajax');
-    sinon.spy(jQuery, 'getJSON');
-    wdcw = wdcwFactory(jQuery, {}, {});
+    mockery.enable({
+      warnOnReplace: false,
+      warnOnUnregistered: false,
+      useCleanCache: true
+    });
+    sinon.stub(jQuery, 'ajax', function (url, cb) {cb();});
+    sinon.stub(jQuery, 'getJSON', function (url, cb) {console.error('omg');cb();});
+    mockery.registerMock('jquery', jQuery);
+
+    wdcwConfig = require('../src/main.js');
   });
 
   afterEach(function connectorColumnHeadersAfterEach() {
     // Don't forget to restore their original implementations after each test.
     jQuery.ajax.restore();
     jQuery.getJSON.restore();
+    mockery.deregisterMock('jquery');
+    mockery.deregisterAll();
+    mockery.resetCache();
+    mockery.disable();
   });
 
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
   it('should be tested here', function connectorColumnHeadersTestHere() {
-    wdcw.columnHeaders.call(connector, registerHeaders);
+    wdcwConfig.schema.call(connector)
+      .then(function (schemaData) {
+        // @todo ...
+        assert(jQuery.ajax.called || jQuery.getJSON.called);
+        assert(Array.isArray(schemaData));
+        done();
+      });
 
-    assert(registerHeaders.called || jQuery.ajax.called || jQuery.getJSON.called);
-    if (registerHeaders.called) {
+    //assert(jQuery.ajax.called || jQuery.getJSON.called);
+    /*if (registerHeaders.called) {
       assert(Array.isArray(registerHeaders.getCall(0).args[0]));
-    }
+    }*/
   });
 
 });
@@ -79,7 +107,7 @@ describe('<%= props.appname %>-connector:tableData', function describesConnector
     registerData = sinon.spy();
     sinon.spy(jQuery, 'ajax');
     sinon.spy(jQuery, 'getJSON');
-    wdcw = wdcwFactory(jQuery, {}, {});
+    wdcwConfig = require('../src/main.js');
   });
 
   afterEach(function connectorTableDataAfterEach() {
@@ -90,12 +118,13 @@ describe('<%= props.appname %>-connector:tableData', function describesConnector
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
   it('should be tested here', function connectorTableDataTestHere() {
-    wdcw.tableData.call(connector, registerData);
+    // @todo ...
+    /*wdcw.tableData.call(connector, registerData);
 
     assert(registerData.called || jQuery.ajax.called || jQuery.getJSON.called);
     if (registerData.called) {
       assert(Array.isArray(registerData.getCall(0).args[0]));
-    }
+    }*/
   });
 
 });
@@ -105,14 +134,16 @@ describe('<%= props.appname %>-connector:teardown', function describesConnectorT
 
   beforeEach(function connectorTearDownBeforeEach() {
     tearDownComplete = sinon.spy();
-    wdcw = wdcwFactory(jQuery, {}, {});
+    wdcwConfig = require('../src/main.js');
   });
 
-  it('calls teardown completion callback', function connectorTearDown() {
+  it('resolves teardown', function connectorTearDown(done) {
     // If available, ensure the completion callback is always called.
-    if (wdcw.hasOwnProperty('teardown')) {
-      wdcw.teardown.call(connector, tearDownComplete);
-      assert(tearDownComplete.called);
+    if (wdcwConfig.hasOwnProperty('teardown')) {
+      wdcwConfig.teardown.call(connector)
+        .then(function () {
+          done();
+        });
     }
   });
 

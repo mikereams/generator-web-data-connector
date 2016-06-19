@@ -1,1 +1,1 @@
-    tearDownComplete();
+    return Promise.resolve();

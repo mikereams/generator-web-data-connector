@@ -1,3 +1,3 @@
-    // Once shutdown tasks are complete, call this. Particularly useful if your
-    // clean-up tasks are asynchronous in nature.
-    tearDownComplete();
+    // Once shutdown tasks are complete, return a resolved Promise. Particularly
+    // useful if your clean-up tasks are asynchronous in nature.
+    return Promise.resolve();

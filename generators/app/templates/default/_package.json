@@ -22,8 +22,10 @@
     "grunt-contrib-uglify": "~0.9",
     "grunt-contrib-watch": "~0.6",<% if (props.deployTo === 'gh-pages') { %>
     "grunt-gh-pages": "^0.10.0",<% } %>
+    "jquery": "*",
     "jsdom": "^3.1.2",
     "mocha": "^2.2.5",
+    "mockery": "^1.7.0",
     "sinon": "^1.16.1"
   }
 }

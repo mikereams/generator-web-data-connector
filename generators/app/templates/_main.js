@@ -1,12 +1,13 @@
-/*jshint -W079 */
-/*jshint -W082 */
-var module = module || {},
-    window = window || {},
-    jQuery = jQuery || {},
-    tableau = tableau || {},
-    wdcw = window.wdcw || {};
+(function(root, factory) {
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = factory(require('jquery'));
+  } else {
+    root.wdcwConfig = factory(root.jQuery);
+  }
+} (this, function ($) {
+  var wdcwConfig = {tables: {}};
 
-module.exports = function($, tableau, wdcw) {
+  wdcwConfig.name = '<%= props.name %>';
 
   <%= templateIncs._privateMethodVars ? include(templateIncs._privateMethodVars).trim() : '' %>
 
@@ -24,23 +25,16 @@ module.exports = function($, tableau, wdcw) {
    *   - tableau.phaseEnum.authPhase: Indicates when the connector is being
    *     accessed in a stripped down context for the sole purpose of refreshing
    *     an OAuth authentication token.
-   * @param {function} setUpComplete
-   *   A callback function that you must call when all setup tasks have been
-   *   performed.
    */
-  wdcw.setup = function setup(phase, setUpComplete) {
+  wdcwConfig.setup = function setup(phase) {
     <%= templateIncs._setUp ? include(templateIncs._setUp).trim() : '' %>
   };
 
   /**
    * Run when the web data connector is being unloaded. Useful if you need
    * custom logic to clean up resources or perform other shutdown tasks.
-   *
-   * @param {function} tearDownComplete
-   *   A callback function that you must call when all shutdown tasks have been
-   *   performed.
    */
-  wdcw.teardown = function teardown(tearDownComplete) {
+  wdcwConfig.teardown = function teardown() {
     <%= templateIncs._tearDown ? include(templateIncs._tearDown).trim() : '' %>
   };
 
@@ -70,10 +64,9 @@ module.exports = function($, tableau, wdcw) {
    *     {name: 'DateTime Column', type: 'datetime', incrementalRefresh: true}
    *   ]);
    */
-  wdcw.columnHeaders = function columnHeaders(registerHeaders) {
+  wdcwConfig.schema = function schema() {
     <%= templateIncs._columnHeaders ? include(templateIncs._columnHeaders).trim() : '' %>
   };
-
 
   /**
    * Primary method called when Tableau is asking for your web data connector's
@@ -111,14 +104,9 @@ module.exports = function($, tableau, wdcw) {
    *   be passed as the value of lastRecord when an incremental refresh is
    *   triggered.
    */
-  wdcw.tableData = function tableData(registerData, lastRecord) {
-    <%= templateIncs._tableData ? include(templateIncs._tableData).trim() : '' %>
-  };
+  <%= templateIncs._tableData ? include(templateIncs._tableData).trim() : '' %>
 
   <%= templateIncs._privateMethods ? include(templateIncs._privateMethods).trim() : '' %>
 
-  return wdcw;
-};
-
-// Set the global wdcw variable as expected.
-wdcw = module.exports(jQuery, tableau, wdcw);
+  return wdcwConfig;
+}));

@@ -4,6 +4,7 @@
   "dependencies": {
     "bootstrap": "~4.0.0",
     "jquery": "~1.11",
-    "tether": "~1.3.2"
+    "tether": "~1.3.2",
+    "wdcw": "~2.0.0"
   }
 }

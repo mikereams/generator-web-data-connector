@@ -1,1 +1,1 @@
-    setUpComplete();
+    return Promise.resolve(phase);
