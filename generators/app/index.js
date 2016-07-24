@@ -64,11 +64,11 @@ module.exports = yeoman.generators.Base.extend({
             name: 'No authentication required',
             value: 'none'
           }, {
+            name: 'Basic authentication (username and password)',
+            value: 'basic'
+          }, {
             name: 'Token-based authentication (bearer token, JWT, etc.)',
             value: 'token'
-          }, {
-            name: 'Basic/digest authentication (username and password)',
-            value: 'basic'
           }, {
             name: 'OAuth',
             value: 'oauth'

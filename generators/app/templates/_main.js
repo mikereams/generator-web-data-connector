@@ -7,7 +7,8 @@
 } (this, function ($) {
   var wdcwConfig = {tables: {}};
 
-  wdcwConfig.name = '<%= props.name %>';
+  wdcwConfig.name = '<%= props.name %>';<% if(props.authentication !== 'none') { %>
+  wdcwConfig.authType = '<%= props.authentication === "basic" ? "basic" : "custom" %>';<% } %>
 
   <%= templateIncs._privateMethodVars ? include(templateIncs._privateMethodVars).trim() : '' %>
 

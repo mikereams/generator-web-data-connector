@@ -193,6 +193,10 @@ describe('web-data-connector:auth-basic', function () {
   it('copies basic auth private method code to main.js', function () {
     assert.fileContent('src/main.js', 'function btoa(');
   });
+
+  it('sets wdcwConfig.authType to basic', function () {
+    assert.fileContent('src/main.js', "wdcwConfig.authType = 'basic';");
+  });
 });
 
 describe('web-data-connector:auth-token', function () {
@@ -214,6 +218,10 @@ describe('web-data-connector:auth-token', function () {
   it('copies token auth header code to main.js', function () {
     wdcAssert.codeCopied('auth-token/_columnHeaders.js', 'src/main.js');
   });
+
+  it('sets wdcwConfig.authType to custom', function () {
+    assert.fileContent('src/main.js', "wdcwConfig.authType = 'custom';");
+  });
 });
 
 describe('web-data-connector:auth-oauth', function () {
@@ -230,6 +238,10 @@ describe('web-data-connector:auth-oauth', function () {
 
   it('copies setup code to main.js', function () {
     wdcAssert.codeCopied('auth-oauth/_setUp.js', 'src/main.js');
+  });
+
+  it('sets wdcwConfig.authType to custom', function () {
+    assert.fileContent('src/main.js', "wdcwConfig.authType = 'custom';");
   });
 });
 
