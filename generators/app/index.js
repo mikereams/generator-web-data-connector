@@ -15,7 +15,7 @@ module.exports = yeoman.generators.Base.extend({
       _helpText: '',
       _form: '',
       _setUp: '',
-      _columnHeaders: '',
+      _getSchema: '',
       _tableData: '',
       _privateMethods: '',
       _privateMethodVars: '',
@@ -282,7 +282,7 @@ module.exports = yeoman.generators.Base.extend({
           name: '_setUp.js',
           folder: 'default'
         }, {
-          name: '_columnHeaders.js',
+          name: '_getSchema.js',
           folder: 'default'
         }, {
           name: '_tableData.js',
@@ -311,7 +311,7 @@ module.exports = yeoman.generators.Base.extend({
     // If token-based or basic authentication is requested, swap out the files.
     if (['token', 'basic'].indexOf(this.props.authentication) !== -1) {
       templateFiles.forEach(function (file, index) {
-        if (['_columnHeaders.js', '_tableData.js'].indexOf(file.name) !== -1) {
+        if (['_getSchema.js', '_tableData.js'].indexOf(file.name) !== -1) {
           templateFiles[index].folder = 'auth-' + that.props.authentication;
         }
         if (file.name === '_privateMethods.js' && that.props.authentication === 'basic') {

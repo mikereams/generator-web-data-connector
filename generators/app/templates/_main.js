@@ -66,7 +66,7 @@
    *   ]);
    */
   wdcwConfig.schema = function schema() {
-    <%= templateIncs._columnHeaders ? include(templateIncs._columnHeaders).trim() : '' %>
+    <%= templateIncs._getSchema ? include(templateIncs._getSchema).trim() : '' %>
   };
 
   /**
