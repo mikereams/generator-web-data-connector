@@ -1,9 +1,12 @@
 {
   "name": "<%= props.appname %>-wdc",
   "description": "A Tableau Web Data Connector for <%= props.name %>.",
-  "version": "0.0.0",
-  "scripts": {
-    "test": "mocha"
+  "version": "2.0.0",
+  "scripts": {<% if (props.needsProxy) { %>
+    "start": "node index.js",<% } else { %>
+    "start": "./node_modules/.bin/http-server -p 9001",<% } %>
+    "test": "mocha",
+    "postinstall": "grunt build"
   },
   "keywords": [
     "tableau-wdc",
@@ -21,7 +24,8 @@
     "grunt-contrib-jshint": "~0.11",
     "grunt-contrib-uglify": "~0.9",
     "grunt-contrib-watch": "~0.6",<% if (props.deployTo === 'gh-pages') { %>
-    "grunt-gh-pages": "^0.10.0",<% } %>
+    "grunt-gh-pages": "^0.10.0",<% } %><% if (!props.needsProxy) { %>
+    "http-server": "^0.9.0",<% } %>
     "jquery": "*",
     "jsdom": "^3.1.2",
     "mocha": "^2.2.5",
