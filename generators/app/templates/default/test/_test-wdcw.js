@@ -4,7 +4,6 @@ var mockery = require('mockery'),
     assert = require('assert'),
     sinon = require('sinon'),
     jQuery = require('../bower_components/jquery/dist/jquery.js')(require('jsdom').jsdom().parentWindow),
-    wdcwFactory = require('../src/main.js'),
     tableau = require('./util/tableau.js'),
     connector = require('./util/connector.js'),
     wdcwConfig;
@@ -83,7 +82,7 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
 
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
-  it('should be tested here', function connectorColumnHeadersTestHere() {
+  it('should be tested here', function connectorColumnHeadersTestHere(done) {
     wdcwConfig.schema.call(connector)
       .then(function (schemaData) {
         // @todo ...
