@@ -1,3 +1,3 @@
    return new Promise.all([
-     $.when($.getJSON('./schema/table.json'))
+     $.when($.getJSON('./src/schema/tableId.json'))
    ]);

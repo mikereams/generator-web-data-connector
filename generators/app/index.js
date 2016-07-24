@@ -23,6 +23,7 @@ module.exports = yeoman.generators.Base.extend({
       _inputField: this.templatePath('fields/_inputField.html'),
       _selectField: this.templatePath('fields/_selectField.html'),
       _textareaField: this.templatePath('fields/_textareaField.html'),
+      _tableId: this.templatePath('default/_tableId.json'),
       _packageJson: this.templatePath('default/_package.json'),
       _travisYml: this.templatePath('default/_travis.yml')
     };
@@ -198,6 +199,9 @@ module.exports = yeoman.generators.Base.extend({
     app: function () {
       this._populateTemplateIncs();
       this.template(this.templateIncs._packageJson, 'package.json');
+      if (this.templateIncs._tableId) {
+        this.template(this.templateIncs._tableId, 'src/schema/tableId.json');
+      }
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
       this.template('_main.js', 'src/main.js');
@@ -299,6 +303,9 @@ module.exports = yeoman.generators.Base.extend({
       templateFiles.forEach(function (file, index) {
         templateFiles[index].folder = 'demo';
       });
+
+      // Remove the schema JSON for the demo.
+      that.templateIncs._tableId = null;
     }
 
     // If token-based or basic authentication is requested, swap out the files.
