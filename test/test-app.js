@@ -81,8 +81,8 @@ describe ('web-data-connector:app-demo', function () {
     wdcAssert.codeCopied('demo/_getSchema.js', 'src/main.js');
   });
 
-  it('copies demo table data code to main.js', function () {
-    wdcAssert.codeCopied('demo/_tableData.js', 'src/main.js');
+  it('copies demo get data code to main.js', function () {
+    wdcAssert.codeCopied('demo/_getData.js', 'src/main.js');
   });
 
   it('copies demo tear down code to main.js', function () {

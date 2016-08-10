@@ -105,7 +105,7 @@
    *   be passed as the value of lastRecord when an incremental refresh is
    *   triggered.
    */
-  <%= templateIncs._tableData ? include(templateIncs._tableData).trim() : '' %>
+  <%= templateIncs._getData ? include(templateIncs._getData).trim() : '' %>
 
   <%= templateIncs._privateMethods ? include(templateIncs._privateMethods).trim() : '' %>
 
