@@ -64,7 +64,8 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
       useCleanCache: true
     });
     sinon.stub(jQuery, 'ajax', function (url, cb) {cb();});
-    sinon.stub(jQuery, 'getJSON', function (url, cb) {console.error('omg');cb();});
+    sinon.stub(jQuery, 'getJSON', function (url) {return url;});
+    sinon.stub(jQuery, 'when', function (arg) {return [arg];});
     mockery.registerMock('jquery', jQuery);
 
     wdcwConfig = require('../src/main.js');
@@ -74,6 +75,7 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
     // Don't forget to restore their original implementations after each test.
     jQuery.ajax.restore();
     jQuery.getJSON.restore();
+    jQuery.when.restore();
     mockery.deregisterMock('jquery');
     mockery.deregisterAll();
     mockery.resetCache();
@@ -85,45 +87,51 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
   it('should be tested here', function connectorColumnHeadersTestHere(done) {
     wdcwConfig.schema.call(connector)
       .then(function (schemaData) {
-        // @todo ...
         assert(jQuery.ajax.called || jQuery.getJSON.called);
         assert(Array.isArray(schemaData));
         done();
       });
-
-    //assert(jQuery.ajax.called || jQuery.getJSON.called);
-    /*if (registerHeaders.called) {
-      assert(Array.isArray(registerHeaders.getCall(0).args[0]));
-    }*/
   });
 
 });
 
-describe('<%= props.appname %>-connector:tableData', function describesConnectorTableData() {
-  var registerData;
+describe('<%= props.appname %>-connector:getData', function describesConnectorTableData() {
 
   beforeEach(function connectorTableDataBeforeEach() {
-    registerData = sinon.spy();
-    sinon.spy(jQuery, 'ajax');
-    sinon.spy(jQuery, 'getJSON');
+    // Here's how you might stub or mock various jQuery methods.
+    mockery.enable({
+      warnOnReplace: false,
+      warnOnUnregistered: false,
+      useCleanCache: true
+    });
+    sinon.stub(jQuery, 'ajax', function (config) {return config;});
+    sinon.stub(jQuery, 'getJSON', function (url) {return url;});
+    sinon.stub(jQuery, 'when', function (arg) {return Promise.resolve([arg]);});
+    mockery.registerMock('jquery', jQuery);
+
     wdcwConfig = require('../src/main.js');
   });
 
   afterEach(function connectorTableDataAfterEach() {
+    // Don't forget to restore their original implementations after each test.
     jQuery.ajax.restore();
     jQuery.getJSON.restore();
+    jQuery.when.restore();
+    mockery.deregisterMock('jquery');
+    mockery.deregisterAll();
+    mockery.resetCache();
+    mockery.disable();
   });
 
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
-  it('should be tested here', function connectorTableDataTestHere() {
-    // @todo ...
-    /*wdcw.tableData.call(connector, registerData);
-
-    assert(registerData.called || jQuery.ajax.called || jQuery.getJSON.called);
-    if (registerData.called) {
-      assert(Array.isArray(registerData.getCall(0).args[0]));
-    }*/
+  it('should be tested here', function connectorTableDataTestHere(done) {
+    wdcwConfig.tables.tableId.getData.call(connector)
+      .then(function (data) {
+        assert(jQuery.ajax.called || jQuery.getJSON.called);
+        assert(Array.isArray(data));
+        done();
+      });
   });
 
 });
