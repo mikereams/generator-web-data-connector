@@ -280,7 +280,8 @@ describe('web-data-connector:deployment-heroku', function () {
   });
 
   it('includes appropriate package.json file', function () {
-    assert.fileContent('package.json', '"postinstall": "grunt build"');
+    assert.fileContent('package.json', '"postinstall": "grunt build');
+    assert.fileContent('package.json', '"engines": {');
   });
 });
 

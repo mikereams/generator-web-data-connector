@@ -2,11 +2,14 @@
   "name": "<%= props.appname %>-wdc",
   "description": "A Tableau Web Data Connector for <%= props.name %>.",
   "version": "2.0.0",
-  "scripts": {<% if (props.needsProxy) { %>
+  "scripts": {
+    "open-simulator": "sleep 2 && open http://localhost:8888/Simulator?src=http://localhost:9001",
+    "postinstall": "grunt build && (cd node_modules/webdataconnector && npm install) || echo 'Skipping WDC simulator install...'",
+    "run-simulator": "cd node_modules/webdataconnector && npm start",
+    "simulate": "node node_modules/npm-run-all/bin/npm-run-all --parallel run-simulator start open-simulator",<% if (props.needsProxy) { %>
     "start": "node index.js",<% } else { %>
     "start": "./node_modules/.bin/http-server -p 9001",<% } %>
-    "test": "mocha",
-    "postinstall": "grunt build"
+    "test": "mocha"
   },
   "keywords": [
     "tableau-wdc",
@@ -30,6 +33,8 @@
     "jsdom": "^3.1.2",
     "mocha": "^2.2.5",
     "mockery": "^1.7.0",
-    "sinon": "^1.16.1"
+    "npm-run-all": "^2.1.1",
+    "sinon": "^1.16.1",
+    "webdataconnector": "tableau/webdataconnector#dev"
   }
 }
