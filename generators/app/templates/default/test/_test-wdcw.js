@@ -55,8 +55,8 @@ describe('<%= props.appname %>-connector:setup', function describesConnectorSetu
 
 });
 
-describe('<%= props.appname %>-connector:schema', function describesConnectorColumnHeaders() {
-  beforeEach(function connectorColumnHeadersBeforeEach() {
+describe('<%= props.appname %>-connector:schema', function describesConnectorSchema() {
+  beforeEach(function connectorSchemaBeforeEach() {
     // Here's how you might stub or mock various jQuery methods.
     mockery.enable({
       warnOnReplace: false,
@@ -71,7 +71,7 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
     wdcwConfig = require('../src/main.js');
   });
 
-  afterEach(function connectorColumnHeadersAfterEach() {
+  afterEach(function connectorSchemaAfterEach() {
     // Don't forget to restore their original implementations after each test.
     jQuery.ajax.restore();
     jQuery.getJSON.restore();
@@ -84,7 +84,7 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
 
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
-  it('should be tested here', function connectorColumnHeadersTestHere(done) {
+  it('should be tested here', function connectorSchemaTestHere(done) {
     wdcwConfig.schema.call(connector)
       .then(function (schemaData) {
         assert(jQuery.ajax.called || jQuery.getJSON.called);
@@ -95,9 +95,9 @@ describe('<%= props.appname %>-connector:schema', function describesConnectorCol
 
 });
 
-describe('<%= props.appname %>-connector:getData', function describesConnectorTableData() {
+describe('<%= props.appname %>-connector:getData', function describesConnectorGetData() {
 
-  beforeEach(function connectorTableDataBeforeEach() {
+  beforeEach(function connectorGetDataBeforeEach() {
     // Here's how you might stub or mock various jQuery methods.
     mockery.enable({
       warnOnReplace: false,
@@ -112,7 +112,7 @@ describe('<%= props.appname %>-connector:getData', function describesConnectorTa
     wdcwConfig = require('../src/main.js');
   });
 
-  afterEach(function connectorTableDataAfterEach() {
+  afterEach(function connectorGetDataAfterEach() {
     // Don't forget to restore their original implementations after each test.
     jQuery.ajax.restore();
     jQuery.getJSON.restore();
@@ -125,10 +125,30 @@ describe('<%= props.appname %>-connector:getData', function describesConnectorTa
 
   // This test is not very meaningful. You should write actual test logic here
   // and/or in new cases below.
-  it('should be tested here', function connectorTableDataTestHere(done) {
+  it('should be tested here', function connectorGetDataTestHere(done) {
     wdcwConfig.tables.tableId.getData.call(connector)
       .then(function (data) {
         assert(jQuery.ajax.called || jQuery.getJSON.called);
+        assert(Array.isArray(data));
+        done();
+      });
+  });
+
+});
+
+describe('<%= props.appname %>-connector:postProcess', function describesConnectorPostProcess() {
+
+  beforeEach(function connectorPostProcessBeforeEach() {
+    wdcwConfig = require('../src/main.js');
+  });
+
+  // This test is not very meaningful. You should write actual test logic here
+  // and/or in new cases below.
+  it('should be tested here', function connectorPostProcessTestHere(done) {
+    var mockData = {entities: []};
+
+    wdcwConfig.tables.tableId.postProcess.call(connector, mockData)
+      .then(function (data) {
         assert(Array.isArray(data));
         done();
       });
