@@ -1,9 +1,9 @@
 {
   "name": "<%= props.appname %>-wdc",
   "description": "Tableau web data connector for <%= props.name %>.",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "engines": {
-    "node": "0.12.x"
+    "node": "4.4.x"
   },
   "scripts": {
     "start": "node index.js",
