@@ -204,6 +204,7 @@ module.exports = yeoman.generators.Base.extend({
       }
       this.template('_bower.json', 'bower.json');
       this.template('_index.html', 'index.html');
+      this.template('_README.md', 'README.md');
       this.template('_main.js', 'src/main.js');
       this.template('_main.css', 'src/main.css');
       this.template('default/test/_test-wdcw.js', 'test/test-wdcw.js');

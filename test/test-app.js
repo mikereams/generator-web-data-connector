@@ -17,6 +17,7 @@ describe('web-data-connector:app-noproxy', function () {
 
   it('creates files', function () {
     assert.file([
+      'README.md',
       'bower.json',
       'package.json',
       '.editorconfig',
@@ -45,6 +46,7 @@ describe('web-data-connector:app-proxy', function () {
 
   it('creates files', function () {
     assert.file([
+      'README.md',
       'bower.json',
       'package.json',
       '.editorconfig',
