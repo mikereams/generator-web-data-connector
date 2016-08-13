@@ -37,6 +37,6 @@
     "mockery": "^1.7.0",
     "npm-run-all": "^2.1.1",
     "sinon": "^1.16.1",
-    "webdataconnector": "tableau/webdataconnector#dev"
+    "webdataconnector": "tableau/webdataconnector#v2.0.1"
   }
 }
