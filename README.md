@@ -92,10 +92,6 @@ is an overview of files and folders to help orient yourself.
   - Holds all CSS style overrides loaded and applied to the connector UI. If you
     wish to make updates to the connector's look and feel, your work will likely
     go here.
-- __`/src/wrapper.js`__
-  - A helper library used to abstract away and simplify the Tableau WDC API. You
-    should not need to update this file, though you may wish to refer to it from
-    time to time. For complete details, jump to [WDC Wrapper](#wdc-wrapper).
 - __`/Gruntfile.js`__
   - File that declares grunt tasks and configurations. For more details, jump to
     [workflow](#workflow).
@@ -133,7 +129,24 @@ Of course, once initialized, you can make tweaks to your connector's workflow by
 adding or editing tasks and task configurations in the generated Gruntfile.js
 file at the root of your connector.
 
-#### Testing
+#### Testing in the WDC Simulator
+
+When the generator scaffolds your connector, it includes the latest copy of the
+Tableau Web Data Connector simulator as a development dependency. You can start
+the simulator from your project root by running one of the following:
+
+```sh
+# Open the simulator with your WDC in "production" mode
+npm run simulate
+
+# Open the simulator with your WDC in "development" mode (like running grunt)
+npm run simulate:dev
+```
+
+Type `ctrl+c` to return to kill the simulator and your WDC and return to your
+normal command prompt.
+
+#### Automated Testing
 
 Recognizing that you're a responsible developer concerned with the long-term
 maintainability of your connector, this generator stubs out some simple unit
@@ -146,65 +159,79 @@ Tests are written using the [Mocha][] JavaScript test framework, as well as
 [Sinon][] for stubbing, and mocking.
 
 
-## WDC Wrapper
+## Web Data Connector Wrapper
 
-This generator comes packaged with a web data connector wrapper--a sort of
-connector on training wheels--that allows you to focus on application logic
-necessary to retrieve your data, not tedious tasks like registering your
-connector, saving and retrieving connection details, stepping through Tableau's
-connector phases, etc.
+This generator makes heavy use of a node package called Web Data Connector
+Wrapper (or WDCW for short). Think of it as a sort of WDC on training wheels
+that allows you to focus on application logic necessary to retrieve your data,
+not tedious tasks like registering your connector, saving and retrieving
+connection details, stepping through Tableau's connector phases, etc.
 
 Rather than learning the Tableau Web Data Connector API, you can dive right into
 the JavaScript in `src/main.js`. Although the file is heavily annotated, brief
 explanations of the various hooks can be found below.
 
+If you wish to make use of some of WDCW's more advanced features, check the
+[complete WDCW docs][].
+
 #### WDC lifecycle phases
 
-The web data connector wrapper expects a global JS object called `wdcw`. Four
-methods can be attached to the `wdcw` object, corresponding to the four phases
-of a connection's lifecycle.
+The web data connector wrapper plugin will fully instantiate a Tableau WDC when
+it's called with a configuration object. Everything in main.js is simply
+building up this configuration object using specific attributes that correspond
+roughly to the four phases of a WDC's lifecycle.
 
-- __Initialization__ `wdcw.setup = function(phase, setUpComplete)`
+- __Initialization__ `wdcwConfig.setup = function(phase)`
   - This method is optional, but can be provided if resources need to be
     initialized or connections need to be verified.
-  - Like all methods, the provided callback (`setUpComplete` in this case) must
-    be called once all tasks associated with the phase are complete.
-- __Retrieving columns__ - `wdcw.columnHeaders = function(registerHeaders)`
-  - This method is required and is called when Tableau wants to know the names
-    and data types of columns provided by your connector.
+  - Like all methods, you must return a Promise and resolve it when all tasks
+    associated with the phase are complete.
+- __Schema definition__ - `wdcwConfig.schema = function()`
+  - This method is required and is called when Tableau is retrieving your WDC's
+    schema (defining tables, columns, types, etc).
+  - Like all methods, you must return a Promise and resolve it with an array of
+    Tableau TableInfo objects that represent your WDC's tables.
+- __Data retrieval__ - `wdcwConfig.tables['yourTableId'].getData = function(lastRecord)`
+  - This method is required for each table you define and is called when Tableau
+    is retrieving data from your connector.
   - The expected format is outlined in `main.js`, and must be provided as the
-    sole argument to the provided callback (`registerHeaders` in this case).
-- __Retrieving data__ - `wdcw.tableData = function(registerData, lastRecord)`
-  - This method is required and is called when Tableau is retrieving data from
-    your connector.
-  - The expected format is outlined in `main.js`, and must be provided as the
-    first argument on the provided callback (`registerData` in this case).
-  - If the API you're connecting to supports paging, and you wish to support
-    incremental extract refreshing, you can pass a second argument to the
-    `registerData` callback representing the last record that was retrieved. If
-    provided, Tableau will call your `wdcw.tableData` method again, this time
-    passing the token you provided for the `lastRecord` argument.
-- __Teardown__ - `wdcw.teardown = function(tearDownComplete)`
+    data returned when the Promise it returns is resolved.
+  - Note that this method takes many optional arguments that can be used in more
+    advanced use-cases. For complete details, check the [complete WDCW docs][].
+- __Data post-processing__ - `wdcwConfig.tables['yourTableId'].postProcess = function (data)`
+  - This method is unique to the WDCW and is not present in Tableau's native API.
+    You can use it as a utility to separate data extraction logic (pulling data
+    from an API) from your data transformation logic. This method is called after
+    the table's 
+  - Like all methods, you must return a Promise and resolve it with data in the
+    format that Tableau's table.appendRows method expects it.
+- __Teardown__ - `wdcwConfig.teardown = function()`
   - This method is optional, but can be provided if resources need to be spun
     down or other cleanup tasks need to occur.
-  - Like all methods, the provided callback (`tearDownComplete` in this case)
-    must be called once all tasks associated with the phase are complete.
+  - Like all methods, you must return a Promise and resolve it once all tasks
+    associated with the phase are complete.
 
 #### Wrapper helpers
 
-The web data connector wrapper also provides some helper methods to simplify the
-way you interact with Tableau. All methods are available on `this` within the
-immediate scope of your `wdcw` methods.
+The web data connector wrapper plugin also includes the concept of an "extended
+connector." The connector, just a plain object passed in as the `this` variable
+in each of the lifecycle methods outlined above, provides helper methods that
+simplify the way you interact with Tableau in your WDCW config. All methods are
+available on `this` within the immediate scope of your `wdcw` methods.
 
 - __Retrieving connection details__
   - Retrieve connection details using `this.getConnectionData()`. This will
     return an object whose keys correspond to form input names in `index.html`.
   - Retrieve the connection username with `this.getUsername()`.
   - Retrieve the connection password with `this.getPassword()`.
+  - Retrieve the "authentication purpose" of the current request with `this.getAuthPurpose()`
 - __Error handling__
   - Use `this.ajaxErrorHandler` as the method called when jQuery AJAX requests
     fail. This will inform Tableau of the error, and pop an error dialog.
 
+Complete details on this "extended" connector can be found here:
+
+https://tableau-mkt.github.io/wdcw/Connector.html
 
 ## Deploying
 
@@ -313,3 +340,4 @@ and encouraged! For full details, check [CONTRIBUTING.md](CONTRIBUTING.md).
 [enable Travis on your repo]: https://travis-ci.org/profile
 [Travis commandline interface]: https://github.com/travis-ci/travis.rb#installation
 [personal access token]: https://github.com/settings/tokens
+[complete WDCW docs]: https://tableau-mkt.github.io/wdcw

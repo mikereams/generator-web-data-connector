@@ -26,6 +26,16 @@
    *   - tableau.phaseEnum.authPhase: Indicates when the connector is being
    *     accessed in a stripped down context for the sole purpose of refreshing
    *     an OAuth authentication token.
+   *
+   * @return Promise
+   *   This method should return a Promise. When all set up tasks for the given
+   *   phase are complete, the promise should be resolved. If your setup tasks
+   *   are completely synchronous, you can simply return Promise.resolve();
+   *
+   * @note If you don't need to run anything during the setup phase, you can
+   * completely remove this block of code.
+   *
+   * @see https://tableau-mkt.github.io/wdcw/wdcw.html#registerSetup
    */
   wdcwConfig.setup = function setup(phase) {
     <%= templateIncs._setUp ? include(templateIncs._setUp).trim() : '' %>
@@ -34,76 +44,64 @@
   /**
    * Run when the web data connector is being unloaded. Useful if you need
    * custom logic to clean up resources or perform other shutdown tasks.
+   *
+   * @return Promise
+   *   This method should return a Promise. When all teardown tasks are complete,
+   *   the promise should be resolved. If your teardown tasks are completely
+   *   synchronous, you can simply return Promise.resolve().
+   *
+   * @note If you don't need to run anything during the teardown phase, you can
+   * completely remove this block of code.
+   *
+   * @see https://tableau-mkt.github.io/wdcw/wdcw.html#registerTeardown
    */
   wdcwConfig.teardown = function teardown() {
     <%= templateIncs._tearDown ? include(templateIncs._tearDown).trim() : '' %>
   };
 
   /**
-   * Primary method called when Tableau is asking for the column headers that
-   * this web data connector provides. Takes a single callable argument that you
-   * should call with the headers you've retrieved.
+   * Primary method called when Tableau is asking for the schema that this web
+   * data connector provides.
    *
-   * @param {function(Array<{name, type, incrementalRefresh}>)} registerHeaders
-   *   A callback function that takes an array of objects as its sole argument.
-   *   For example, you might call the callback in the following way:
-   *   registerHeaders([
-   *     {name: 'Boolean Column', type: 'bool'},
-   *     {name: 'Date Column', type: 'date'},
-   *     {name: 'DateTime Column', type: 'datetime'},
-   *     {name: 'Float Column', type: 'float'},
-   *     {name: 'Integer Column', type: 'int'},
-   *     {name: 'String Column', type: 'string'}
-   *   ]);
+   * @return Promise.<Array.TableInfo>
+   *   Should return a promise to an array of native Tableau TableInfo objects.
+   *   If your WDC only has one table, then it should be an array of length 1.
+   *   If your WDC supports multiple tables, then you may return as many Table
+   *   Info objects as you need. Get complete details on what a TableInfo object
+   *   looks like in the Tableau WDC API docs.
    *
-   *   Note: to enable support for incremental extract refreshing, add a third
-   *   key (incrementalRefresh) to the header object. Candidate columns for
-   *   incremental refreshes must be of type datetime or integer. During an
-   *   incremental refresh attempt, the most recent value for the given column
-   *   will be passed as "lastRecord" to the tableData method. For example:
-   *   registerHeaders([
-   *     {name: 'DateTime Column', type: 'datetime', incrementalRefresh: true}
-   *   ]);
+   * @see https://tableau.github.io/webdataconnector/ref/api_ref.html#webdataconnectorapi.tableinfo-1
+   * @see https://tableau-mkt.github.io/wdcw/wdcw.html#registerSchema
    */
   wdcwConfig.schema = function schema() {
     <%= templateIncs._getSchema ? include(templateIncs._getSchema).trim() : '' %>
   };
 
   /**
-   * Primary method called when Tableau is asking for your web data connector's
-   * data. Takes a callable argument that you should call with all of the
-   * data you've retrieved. You may optionally pass a token as a second argument
-   * to support paged/chunked data retrieval.
+   * For each table you specify in your wdcwConfig.schema method above, you must
+   * add a property in the wdcwConfig.tables object. The name of each property
+   * must correspond to the tableId you specified in your schema. If you have
+   * multiple tables, you will have multiple properties, for example:
    *
-   * @param {function(Array<{object}>, {string})} registerData
-   *   A callback function that takes an array of objects as its sole argument.
-   *   Each object should be a simple key/value map of column name to column
-   *   value. For example, you might call the callback in the following way:
-   *   registerData([
-   *     {'String Column': 'String Column Value', 'Integer Column': 123}
-   *   ]});
+   * wdcwConfigs.tables.users = {};
+   * wdcwConfigs.tables.comments = {};
    *
-   *   It's possible that the API you're interacting with supports some mechanism
-   *   for paging or filtering. To simplify the process of making several paged
-   *   calls to your API, you may optionally pass a second argument in your call
-   *   to the registerData callback. This argument should be a string token that
-   *   represents the last record you retrieved.
+   * Each sub-property of the wdcwConfigs.tables object must define a getData
+   * method and may optionally define a postProcess method. The getData method
+   * is called for each table when Tableau is retrieving data for a table. You
+   * may choose to split apart "data collection" logic and "data transformation"
+   * logic by keeping your getData method focused on extraction and placing all
+   * transformation logic in your postProcess method. Totally up to you. That
+   * might look like:
    *
-   *   If provided, your implementation of the tableData method will be called
-   *   again, this time with the token you provide here. Once all data has been
-   *   retrieved, pass null, false, 0, or an empty string.
+   * wdcwConfigs.tables.users.getData = function () {};
+   * wdcwConfigs.tables.users.postProcess = function (data) {};
+   * wdcwConfigs.tables.comments.getData = function () {};
    *
-   * @param {string} lastRecord
-   *   Optional. If you indicate in the call to registerData that more data is
-   *   available (by passing a token representing the last record retrieved),
-   *   then the lastRecord argument will be populated with the token that you
-   *   provided. Use this to update/modify the API call you make to handle
-   *   pagination or filtering.
+   * More details below.
    *
-   *   If you indicated a column in wdcw.columnHeaders suitable for use during
-   *   an incremental extract refresh, the last value of the given column will
-   *   be passed as the value of lastRecord when an incremental refresh is
-   *   triggered.
+   * @see https://tableau-mkt.github.io/wdcw/wdcw.html#registerData
+   * @see https://tableau-mkt.github.io/wdcw/wdcw.html#registerPostProcess
    */
   <%= templateIncs._getData ? include(templateIncs._getData).trim() : '' %>
 
