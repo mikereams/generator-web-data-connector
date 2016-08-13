@@ -1,4 +1,4 @@
-# Web Data Connector Generator [![Build Status](https://secure.travis-ci.org/tableau-mkt/generator-web-data-connector.png?branch=master)](https://travis-ci.org/tableau-mkt/generator-web-data-connector)
+# Web Data Connector Generator [![Build Status](https://secure.travis-ci.org/tableau-mkt/generator-web-data-connector.png?branch=1.0)](https://travis-ci.org/tableau-mkt/generator-web-data-connector)
 
 A scaffolding tool for Tableau Web Data Connectors, built on [yeoman][].
 
