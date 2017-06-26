@@ -18,7 +18,7 @@ module.exports = function(grunt) {
     concat: {
       js: {
         options: {
-          separator: ';'
+          separator: ';\n'
         },
         src: [
           'bower_components/es6-promise/es6-promise.js',
